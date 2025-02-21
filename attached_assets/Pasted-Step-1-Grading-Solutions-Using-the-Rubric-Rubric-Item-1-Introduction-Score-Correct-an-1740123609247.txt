@@ -1,0 +1,85 @@
+Step 1: Grading Solutions Using the Rubric
+
+Rubric Item 1: Introduction
+Score:
+●      Correct answer Score: 2 points
+●      Incorrect answer 1 Score:  0 points
+●      Incorrect answer 2 Score:  0 points
+ 
+Rationale:
+●      Correct answer:  
+●      Incorrect answer 1:  
+●      Incorrect answer 2:  
+Rubric Item 2: Fitness Function Construction 
+Score:
+●      Correct answer Score: 2 points
+●      Incorrect answer 1 Score:  0 points
+●      Incorrect answer 2 Score:  0 points
+ 
+Rationale:
+●      Correct answer:  
+●      Incorrect answer 1:  
+●      Incorrect answer 2:  
+ 
+Rubric Item 3: Normalization Calculations 
+Score:
+●      Correct answer Score: 2 points
+●      Incorrect answer 1 Score:  0 points
+●      Incorrect answer 2 Score:  0 points
+ 
+Rationale:
+●      Correct answer:  
+●      Incorrect answer 1:  
+●      Incorrect answer 2:  
+Rubric Item 4: Final Fitness Score Calculation
+Score:
+●      Correct answer Score: 2 points
+●      Incorrect answer 1 Score:  0 points
+●      Incorrect answer 2 Score:  1 points
+
+Rubric Item 5:  Result Analysis and Conclusion
+Score:
+●      Correct answer Score: 2 points
+●      Incorrect answer 1 Score:  0 points
+●      Incorrect answer 2 Score:  0 points
+
+Step 2: Rubric Evaluation (1-4)
+Rubric Item 1: Introduction  
+I. Technical Accuracy: 4
+ii. Relevance and Necessity: 4
+iii. Partial Credit Structure: 3 (differs for incorrect answers 1 and 2)
+iv. Weighting: 4
+v. Clarity and Objectivity: 4
+vi. Differentiation Power: 4
+
+Rubric Item 2: Fitness Function Construction
+I. Technical Accuracy: 4
+ii. Relevance and Necessity: 4
+iii. Partial Credit Structure: 3 (differs for incorrect answers 1 and 2)
+iv. Weighting: 4
+v. Clarity and Objectivity: 4
+vi. Differentiation Power: 4
+
+Rubric Item 3: Normalization Calculations
+I. Technical Accuracy: 4
+ii. Relevance and Necessity: 4
+iii. Partial Credit Structure: 3 (differs for incorrect answers 1 and 2)
+iv. Weighting: 4
+v. Clarity and Objectivity: 4
+vi. Differentiation Power: 4
+Rubric Item 4:  Final Fitness Score Calculation
+I. Technical Accuracy: 4
+ii. Relevance and Necessity: 4
+iii. Partial Credit Structure: 3 (differs for incorrect answers 1 and 2)
+iv. Weighting: 4
+v. Clarity and Objectivity: 4
+vi. Differentiation Power: 4
+
+Rubric Item 5:  Result Analysis and Conclusion
+I. Technical Accuracy: 4
+ii. Relevance and Necessity: 4
+iii. Partial Credit Structure: 3 (differs for incorrect answers 1 and 2)
+iv. Weighting: 4
+v. Clarity and Objectivity: 4
+vi. Differentiation Power: 4
+

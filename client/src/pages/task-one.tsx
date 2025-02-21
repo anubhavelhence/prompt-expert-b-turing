@@ -93,9 +93,14 @@ export default function TaskOne() {
                   <p>{workflow.taskZeroInputs.expert_a_subdomain}</p>
                 </div>
                 <div>
+                  <h3 className="font-medium">Difficulty Score:</h3>
+                  <p>{workflow.taskZeroInputs.expert_a_difficulty_score}</p>
+                </div>
+                <div>
                   <h3 className="font-medium">Problem Statement:</h3>
                   <p>{workflow.taskZeroInputs.expert_a_problem}</p>
                 </div>
+                <p>Your task is to evaluate the question based on the following criteria:</p>
               </div>
             </div>
           </CardContent>

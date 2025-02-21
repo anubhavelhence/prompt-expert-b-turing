@@ -17,7 +17,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Eye } from "lucide-react";
+import { Eye, Plus } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 function parseRubricNames(rubricText: string): string[] {
   const names: string[] = [];
@@ -55,17 +56,28 @@ function RubricItemForm({
   name,
   index,
   form,
-  workflow
+  workflow,
+  onRemove
 }: { 
   name: string;
   index: number;
   form: any;
   workflow: WorkflowTask;
+  onRemove?: () => void;
 }) {
+  if (!workflow.taskZeroInputs) return null;
+
   return (
     <div className="space-y-6 border-b pb-6 last:border-0">
-      <h3 className="font-semibold">Rubric Item {index + 1}: {name}</h3>
-      
+      <div className="flex justify-between items-center">
+        <h3 className="font-semibold">Rubric Item {index + 1}: {name}</h3>
+        {onRemove && (
+          <Button variant="destructive" size="sm" onClick={onRemove}>
+            Remove
+          </Button>
+        )}
+      </div>
+
       <div className="space-y-4">
         <h4 className="font-medium">Score:</h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -191,6 +203,30 @@ export default function TaskTwo() {
   // Watch form values for live updates
   const formValues = form.watch();
 
+  const addRubricItem = () => {
+    const currentItems = form.getValues().rubricItems || [];
+    form.setValue("rubricItems", [
+      ...currentItems,
+      {
+        name: `New Rubric Item ${currentItems.length + 1}`,
+        correctScore: 0,
+        incorrectScore1: 0,
+        incorrectScore2: 0,
+        correctRationale: "",
+        incorrectRationale1: "",
+        incorrectRationale2: "",
+      }
+    ]);
+  };
+
+  const removeRubricItem = (index: number) => {
+    const currentItems = form.getValues().rubricItems || [];
+    form.setValue("rubricItems", [
+      ...currentItems.slice(0, index),
+      ...currentItems.slice(index + 1)
+    ]);
+  };
+
   const mutation = useMutation({
     mutationFn: async (data: TaskTwoResponse) => {
       await apiRequest("PATCH", `/api/workflow/${id}/task-two`, data);
@@ -229,15 +265,29 @@ export default function TaskTwo() {
                 <form onSubmit={form.handleSubmit((data) => mutation.mutate(data))}>
                   <TabsContent value="step1">
                     <div className="space-y-8">
-                      {rubricNames.map((name, index) => (
+                      {formValues.rubricItems.map((item, index) => (
                         <RubricItemForm
                           key={index}
-                          name={name}
+                          name={item.name}
                           index={index}
                           form={form}
                           workflow={workflow}
+                          onRemove={
+                            // Only allow removing manually added items
+                            index >= rubricNames.length ? () => removeRubricItem(index) : undefined
+                          }
                         />
                       ))}
+
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full"
+                        onClick={addRubricItem}
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add Rubric Item
+                      </Button>
                     </div>
                   </TabsContent>
 
@@ -255,7 +305,7 @@ export default function TaskTwo() {
                                 <li>Incorrect answer 1 Score: {item.incorrectScore1} points</li>
                                 <li>Incorrect answer 2 Score: {item.incorrectScore2} points</li>
                               </ul>
-                              
+
                               <h5 className="font-medium mt-4">Rationale:</h5>
                               <ul className="ml-4 space-y-2">
                                 <li>
