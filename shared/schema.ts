@@ -7,7 +7,7 @@ export const taskFourResponseSchema = z.object({
   overallRubricsCompleteness: z.number().min(1).max(4),
   overallRubricsClarity: z.number().min(1).max(4),
   overallRubricsFlexibility: z.number().min(1).max(4),
-  evaluateRubricsRationale: z.string().min(1, "Rationale is required"),
+  evaluateRubricsRationale: z.string().optional().default(""),
 });
 
 // Update workflowTasks table
@@ -94,14 +94,14 @@ export const taskOneResponseSchema = z.object({
   domainCorrect: z.boolean(),
   subdomainCorrect: z.boolean(),
   difficultyScore: z.number().min(0).max(5),
-  quality: z.string().min(1, "Quality assessment is required"),
-  suggestions: z.string().min(1, "Suggestions are required"),
+  quality: z.string().optional().default(""),
+  suggestions: z.string().optional().default(""),
   correctAnswerGrade: z.number().min(0).max(1),
-  correctAnswerRationale: z.string().min(1, "Rationale is required"),
+  correctAnswerRationale: z.string().optional().default(""),
   incorrectAnswer1Grade: z.number().min(0).max(1),
-  incorrectAnswer1Rationale: z.string().min(1, "Rationale for incorrect answer 1 is required"),
+  incorrectAnswer1Rationale: z.string().optional().default(""),
   incorrectAnswer2Grade: z.number().min(0).max(1),
-  incorrectAnswer2Rationale: z.string().min(1, "Rationale for incorrect answer 2 is required"),
+  incorrectAnswer2Rationale: z.string().optional().default(""),
 });
 
 export const taskTwoResponseSchema = z.object({
