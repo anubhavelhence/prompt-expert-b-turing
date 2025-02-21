@@ -51,7 +51,16 @@ export default function TaskOne() {
     onSuccess: () => {
       toast({
         title: "Success",
-        description: "Task 1 responses saved",
+        description: "Task 1 responses saved. Moving to Task 2...",
+      });
+      // Navigate to Task 2 after successful submission
+      setLocation(`/task-two/${id}`);
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to save responses",
+        variant: "destructive",
       });
     },
   });
@@ -73,11 +82,21 @@ export default function TaskOne() {
             <h2 className="text-xl font-bold mb-4">Task Information</h2>
             <p className="mb-4">Run this prompt and based on output answer the following question:</p>
             <div className="bg-muted p-4 rounded-lg">
-              <p>You are an expert evaluator tasked with assessing the quality of proposed questions for testing Large Language Models (LLMs). Your evaluation is crucial for ensuring that these questions meet the required standards for difficulty, originality, and expert-level reasoning. Your assessment will contribute to the advancement of AI evaluation techniques.</p>
-              <p className="mt-4">Here are the details of the proposed question:</p>
-              <p className="mt-2">Domain: {workflow.taskZeroInputs.expert_a_domain}</p>
-              <p className="mt-2">Problem Statement:</p>
-              <p>{workflow.taskZeroInputs.expert_a_problem}</p>
+              <p className="mb-4">You are an expert evaluator tasked with assessing the quality of proposed questions for testing Large Language Models (LLMs). Your evaluation is crucial for ensuring that these questions meet the required standards for difficulty, originality, and expert-level reasoning. Your assessment will contribute to the advancement of AI evaluation techniques.</p>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-medium">Domain:</h3>
+                  <p>{workflow.taskZeroInputs.expert_a_domain}</p>
+                </div>
+                <div>
+                  <h3 className="font-medium">Subdomain:</h3>
+                  <p>{workflow.taskZeroInputs.expert_a_subdomain}</p>
+                </div>
+                <div>
+                  <h3 className="font-medium">Problem Statement:</h3>
+                  <p>{workflow.taskZeroInputs.expert_a_problem}</p>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
