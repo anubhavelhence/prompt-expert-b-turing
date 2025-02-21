@@ -76,6 +76,7 @@ export default function TaskOne() {
               <p>You are an expert evaluator tasked with assessing the quality of proposed questions for testing Large Language Models (LLMs). Your evaluation is crucial for ensuring that these questions meet the required standards for difficulty, originality, and expert-level reasoning. Your assessment will contribute to the advancement of AI evaluation techniques.</p>
               <p className="mt-4">Here are the details of the proposed question:</p>
               <p className="mt-2">Domain: {workflow.taskZeroInputs.expert_a_domain}</p>
+              <p className="mt-2">Problem Statement:</p>
               <p>{workflow.taskZeroInputs.expert_a_problem}</p>
             </div>
           </CardContent>

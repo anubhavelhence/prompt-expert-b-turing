@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { taskZeroSchema, taskOneResponseSchema } from "@shared/schema";
+import { taskZeroSchema, taskOneResponseSchema, taskTwoResponseSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/workflow", async (req, res) => {
@@ -43,6 +43,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(workflow);
     } catch (error) {
       res.status(400).json({ error: "Invalid task one responses" });
+    }
+  });
+
+  app.patch("/api/workflow/:id/task-two", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const responses = taskTwoResponseSchema.parse(req.body);
+      const workflow = await storage.updateTaskTwoResponses(id, responses);
+      res.json(workflow);
+    } catch (error) {
+      res.status(400).json({ error: "Invalid task two responses" });
     }
   });
 

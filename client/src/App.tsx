@@ -6,6 +6,7 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import TaskZero from "@/pages/task-zero";
 import TaskOne from "@/pages/task-one";
+import TaskTwo from "@/pages/task-two";
 
 function Router() {
   return (
@@ -13,6 +14,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/task-zero" component={TaskZero} />
       <Route path="/task-one/:id" component={TaskOne} />
+      <Route path="/task-two/:id" component={TaskTwo} />
       <Route component={NotFound} />
     </Switch>
   );

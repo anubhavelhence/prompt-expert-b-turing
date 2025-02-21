@@ -1,0 +1,59 @@
+problem. Let me analyze the components and create appropriate rubric items.
+<rubrics>
+<name>
+Tensor Decomposition Complexity Reduction
+</name>
+<reasoning>
+This is a fundamental requirement that tests understanding of both computational complexity and tensor decomposition. The solution must show how the complexity reduction is achieved through proper rank selection and matrix operations. Common errors in incorrect solutions include lacking proper mathematical justification and merely stating the final complexity without deriving it.
+</reasoning>
+<grading_guidelines>
+2 points: Correctly derives complexity reduction from O(Kd³) to O(Kd^(3/2)) with proper mathematical justification using rank constraints R₁, R₂, R₃
+1 point: Shows basic understanding of complexity reduction but has minor errors in rank selection or derivation steps
+0 points: Fails to properly derive complexity reduction or makes major mathematical errors
+</grading_guidelines>
+<item_weight>
+0.30
+</item_weight>
+<name>
+Tucker Decomposition Structure and Convergence
+</name>
+<reasoning>
+The preservation of Tucker decomposition structure and convergence proof are crucial technical requirements. Incorrect solutions often lack rigorous convergence proofs or fail to maintain the proper tensor structure.
+</reasoning>
+<grading_guidelines>
+2 points: Correctly maintains Tucker structure X ≈ C ×₁ U₁ ×₂ U₂ ×₃ U₃ and proves convergence using ALS with Frobenius norm minimization
+1 point: Maintains structure but has minor errors in convergence proof
+0 points: Fails to maintain proper Tucker structure or lacks valid convergence proof
+</grading_guidelines>
+<item_weight>
+0.25
+</item_weight>
+<name>
+KL-Divergence Bounds
+</name>
+<reasoning>
+This tests understanding of both statistical learning theory and approximation bounds. Solutions must properly derive the error bounds for the contrastive loss. Incorrect solutions often fail to properly connect tensor approximation error to KL-divergence bounds.
+</reasoning>
+<grading_guidelines>
+2 points: Correctly proves ||ℒ - ℒ_approx|| = O(Kd^(3/2)) with proper mathematical derivation
+1 point: Shows basic understanding of bounds but has minor errors in derivation
+0 points: Fails to properly derive bounds or makes fundamental conceptual errors
+</grading_guidelines>
+<item_weight>
+0.25
+</item_weight>
+<name>
+Structural Consistency and Trade-off Analysis
+</name>
+<reasoning>
+This tests the ability to balance computational efficiency with representation quality. Solutions must properly formulate and analyze the trade-off optimization problem while maintaining structural constraints.
+</reasoning>
+<grading_guidelines>
+2 points: Correctly formulates structural constraints and derives optimal trade-off through proper optimization formulation
+1 point: Shows understanding of trade-off but has minor errors in constraint formulation
+0 points: Fails to properly formulate constraints or lacks valid trade-off analysis
+</grading_guidelines>
+<item_weight>
+0.20
+</item_weight>
+</rubrics>

@@ -31,6 +31,17 @@ export const workflowTasks = pgTable("workflow_tasks", {
     incorrectAnswer2Grade: number;
     incorrectAnswer2Rationale: string;
   }>().default(null),
+  taskTwoResponses: json("task_two_responses").$type<{
+    rubricItems: {
+      name: string;
+      correctScore: number;
+      incorrectScore1: number;
+      incorrectScore2: number;
+      correctRationale: string;
+      incorrectRationale1: string;
+      incorrectRationale2: string;
+    }[]
+  }>().default(null),
   currentStep: text("current_step").default("task-zero"),
 });
 
@@ -63,9 +74,22 @@ export const taskOneResponseSchema = z.object({
   incorrectAnswer2Rationale: z.string().min(1, "Rationale for incorrect answer 2 is required"),
 });
 
+export const taskTwoResponseSchema = z.object({
+  rubricItems: z.array(z.object({
+    name: z.string().min(1, "Rubric item name is required"),
+    correctScore: z.number().min(0).max(2),
+    incorrectScore1: z.number().min(0).max(2),
+    incorrectScore2: z.number().min(0).max(2),
+    correctRationale: z.string().min(1, "Rationale is required"),
+    incorrectRationale1: z.string().min(1, "Rationale is required"),
+    incorrectRationale2: z.string().min(1, "Rationale is required"),
+  }))
+});
+
 export const insertWorkflowSchema = createInsertSchema(workflowTasks);
 
 export type InsertWorkflow = z.infer<typeof insertWorkflowSchema>;
 export type WorkflowTask = typeof workflowTasks.$inferSelect;
 export type TaskZeroInputs = z.infer<typeof taskZeroSchema>;
 export type TaskOneResponse = z.infer<typeof taskOneResponseSchema>;
+export type TaskTwoResponse = z.infer<typeof taskTwoResponseSchema>;
