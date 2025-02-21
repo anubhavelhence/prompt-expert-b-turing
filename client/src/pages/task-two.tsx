@@ -21,15 +21,24 @@ import { Eye, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 function parseRubricNames(rubricText: string): string[] {
-  const names: string[] = [];
-  const nameRegex = /<name>(.*?)<\/name>/g;
-  let match;
+  try {
+    const names: string[] = [];
+    const nameRegex = /<name>([\s\S]*?)<\/name>/g;
+    let match;
 
-  while ((match = nameRegex.exec(rubricText)) !== null) {
-    names.push(match[1].trim());
+    while ((match = nameRegex.exec(rubricText)) !== null) {
+      const name = match[1].trim();
+      if (name) {
+        names.push(name);
+      }
+    }
+
+    console.log("Parsed rubric names:", names); // Debug log
+    return names;
+  } catch (error) {
+    console.error("Error parsing rubric names:", error);
+    return [];
   }
-
-  return names;
 }
 
 function AnswerModal({ title, content }: { title: string; content: string }) {
@@ -182,6 +191,8 @@ export default function TaskTwo() {
   const rubricNames = workflow?.taskZeroInputs 
     ? parseRubricNames(workflow.taskZeroInputs.expert_a_rubric)
     : [];
+
+  console.log("Expert A Rubric:", workflow?.taskZeroInputs?.expert_a_rubric); // Debug log
 
   const defaultValues = {
     rubricItems: rubricNames.map(name => ({
