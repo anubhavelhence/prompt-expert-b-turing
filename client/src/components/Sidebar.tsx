@@ -17,8 +17,9 @@ export function Sidebar() {
   const currentId = isNumeric(workflowId || '') ? workflowId : undefined;
 
   // If we're on a task page, fetch the workflow data
-  const { data: workflow } = useQuery<WorkflowTask>({
-    queryKey: currentId ? [`/api/workflow/${currentId}`] : null,
+  const { data: workflow } = useQuery({
+    queryKey: currentId ? ['/api/workflow', currentId] : null,
+    enabled: !!currentId,
   });
 
   const resetAll = () => {
@@ -43,21 +44,37 @@ export function Sidebar() {
     <div className="w-64 h-screen bg-card fixed left-0 top-0 border-r p-4 flex flex-col">
       <div className="space-y-2 flex-1">
         <h2 className="font-semibold mb-4">Task Navigation</h2>
-        {tasks.map((task, index) => (
-          <Link 
-            key={task.path} 
-            href={task.path}
-          >
-            <a 
-              className={cn(
-                "block p-2 rounded-lg hover:bg-accent transition-colors",
-                location.includes(task.path.split('/')[1]) && "bg-accent"  // Match on task name instead of full path
-              )}
+        {tasks.map((task, index) => {
+          // Don't allow navigation to tasks 1-4 if Task 0 hasn't been completed
+          const isDisabled = index > 0 && !currentId;
+
+          return (
+            <Link 
+              key={index}
+              href={isDisabled ? "/task-zero" : task.path}
             >
-              {task.label}
-            </a>
-          </Link>
-        ))}
+              <a 
+                className={cn(
+                  "block p-2 rounded-lg transition-colors",
+                  isDisabled ? "opacity-50 cursor-not-allowed" : "hover:bg-accent",
+                  location.includes(task.path.split('/')[1]) && "bg-accent"
+                )}
+                onClick={(e) => {
+                  if (isDisabled) {
+                    e.preventDefault();
+                    toast({
+                      title: "Complete Task 0 first",
+                      description: "You need to complete Task 0 before accessing other tasks.",
+                      variant: "destructive",
+                    });
+                  }
+                }}
+              >
+                {task.label}
+              </a>
+            </Link>
+          );
+        })}
       </div>
       <Button 
         variant="destructive" 
