@@ -13,6 +13,8 @@ import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import { useEffect } from "react";
+import { AnswerModal } from "@/components/AnswerModal";
 
 export default function TaskOne() {
   const { id } = useParams();
@@ -23,22 +25,30 @@ export default function TaskOne() {
     queryKey: [`/api/workflow/${id}`],
   });
 
+  const savedFormData = typeof window !== 'undefined'
+    ? localStorage.getItem(`task-one-${id}`)
+    : null;
+
+  const defaultValues = savedFormData
+    ? JSON.parse(savedFormData)
+    : {
+        metadataQuality: 1,
+        domainCorrect: true,
+        subdomainCorrect: true,
+        difficultyScore: 1,
+        quality: "",
+        suggestions: "",
+        correctAnswerGrade: 0,
+        correctAnswerRationale: "",
+        incorrectAnswer1Grade: 0,
+        incorrectAnswer1Rationale: "",
+        incorrectAnswer2Grade: 0,
+        incorrectAnswer2Rationale: "",
+      };
+
   const form = useForm<TaskOneResponse>({
     resolver: zodResolver(taskOneResponseSchema),
-    defaultValues: {
-      metadataQuality: 1,
-      domainCorrect: true,
-      subdomainCorrect: true,
-      difficultyScore: 1,
-      quality: "",
-      suggestions: "",
-      correctAnswerGrade: 0,
-      correctAnswerRationale: "",
-      incorrectAnswer1Grade: 0,
-      incorrectAnswer1Rationale: "",
-      incorrectAnswer2Grade: 0,
-      incorrectAnswer2Rationale: "",
-    },
+    defaultValues,
   });
 
   // Watch form values for live updates
@@ -65,6 +75,13 @@ export default function TaskOne() {
       });
     },
   });
+
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      localStorage.setItem(`task-one-${id}`, JSON.stringify(value));
+    });
+    return () => subscription.unsubscribe();
+  }, [form, id]);
 
   if (isLoading || !workflow) {
     return <div>Loading...</div>;
@@ -187,7 +204,13 @@ export default function TaskOne() {
                     <h3 className="font-semibold mb-4">Grade the Solutions</h3>
                     <div className="space-y-6">
                       <div className="space-y-4">
-                        <h4 className="font-medium">Correct Answer</h4>
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-medium">Correct Answer</h4>
+                          <AnswerModal
+                            title="Correct Answer"
+                            content={workflow.taskZeroInputs.expert_a_correct}
+                          />
+                        </div>
                         <div className="space-y-2">
                           <Label>Grade (0-1)</Label>
                           <Slider
@@ -206,7 +229,13 @@ export default function TaskOne() {
                       </div>
 
                       <div className="space-y-4">
-                        <h4 className="font-medium">Incorrect Answer 1</h4>
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-medium">Incorrect Answer 1</h4>
+                          <AnswerModal
+                            title="Incorrect Answer 1"
+                            content={workflow.taskZeroInputs.expert_a_incorrect_1}
+                          />
+                        </div>
                         <div className="space-y-2">
                           <Label>Grade (0-1)</Label>
                           <Slider
@@ -225,7 +254,13 @@ export default function TaskOne() {
                       </div>
 
                       <div className="space-y-4">
-                        <h4 className="font-medium">Incorrect Answer 2</h4>
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-medium">Incorrect Answer 2</h4>
+                          <AnswerModal
+                            title="Incorrect Answer 2"
+                            content={workflow.taskZeroInputs.expert_a_incorrect_2}
+                          />
+                        </div>
                         <div className="space-y-2">
                           <Label>Grade (0-1)</Label>
                           <Slider
