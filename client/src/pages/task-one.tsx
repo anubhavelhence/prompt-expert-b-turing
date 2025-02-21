@@ -51,7 +51,17 @@ export default function TaskOne() {
     onSuccess: () => {
       toast({
         title: "Success",
-        description: "Task 1 responses saved",
+        description: "Task 1 responses saved. Moving to Task 2...",
+      });
+      setTimeout(() => {
+        setLocation(`/task-two/${id}`);
+      }, 1000);
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to save responses",
+        variant: "destructive",
       });
     },
   });
@@ -82,7 +92,7 @@ export default function TaskOne() {
               <p>{workflow.taskZeroInputs.expert_a_subdomain}</p>
 
               <p className="mt-2">Difficulty Score:</p>
-              <p>{workflow.taskZeroInputs.expert_a_difficulty}</p>
+              <p>{workflow.taskZeroInputs.expert_a_difficulty_score}</p>
 
               <p className="mt-2">Problem Statement:</p>
               <p>{workflow.taskZeroInputs.expert_a_problem}</p>
