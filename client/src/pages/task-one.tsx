@@ -41,6 +41,9 @@ export default function TaskOne() {
     },
   });
 
+  // Watch form values for live updates
+  const formValues = form.watch();
+
   const mutation = useMutation({
     mutationFn: async (data: TaskOneResponse) => {
       await apiRequest("PATCH", `/api/workflow/${id}/task-one`, data);
@@ -57,7 +60,9 @@ export default function TaskOne() {
     return <div>Loading...</div>;
   }
 
-  const formData = form.getValues();
+  if (!workflow.taskZeroInputs) {
+    return <div>Error: Task Zero inputs not found</div>;
+  }
 
   return (
     <div className="min-h-screen bg-background p-4">
@@ -96,7 +101,7 @@ export default function TaskOne() {
                         <Label>Domain</Label>
                         <RadioGroup 
                           onValueChange={(v) => form.setValue("domainCorrect", v === "correct")}
-                          defaultValue="correct"
+                          defaultValue={formValues.domainCorrect ? "correct" : "needs-improvement"}
                         >
                           <div className="flex items-center space-x-2">
                             <RadioGroupItem value="correct" id="domain-correct" />
@@ -113,7 +118,7 @@ export default function TaskOne() {
                         <Label>Subdomain</Label>
                         <RadioGroup 
                           onValueChange={(v) => form.setValue("subdomainCorrect", v === "correct")}
-                          defaultValue="correct"
+                          defaultValue={formValues.subdomainCorrect ? "correct" : "needs-improvement"}
                         >
                           <div className="flex items-center space-x-2">
                             <RadioGroupItem value="correct" id="subdomain-correct" />
@@ -132,9 +137,10 @@ export default function TaskOne() {
                           min={1} 
                           max={5} 
                           step={1}
-                          defaultValue={[1]}
+                          defaultValue={[formValues.difficultyScore]}
                           onValueChange={([v]) => form.setValue("difficultyScore", v)}
                         />
+                        <p className="text-sm text-muted-foreground">Current value: {formValues.difficultyScore}</p>
                       </div>
 
                       <div className="space-y-2">
@@ -160,9 +166,10 @@ export default function TaskOne() {
                             min={0} 
                             max={1} 
                             step={0.1}
-                            defaultValue={[0]}
+                            defaultValue={[formValues.correctAnswerGrade]}
                             onValueChange={([v]) => form.setValue("correctAnswerGrade", v)}
                           />
+                          <p className="text-sm text-muted-foreground">Current value: {formValues.correctAnswerGrade}</p>
                         </div>
                         <div className="space-y-2">
                           <Label>Rationale</Label>
@@ -178,9 +185,10 @@ export default function TaskOne() {
                             min={0} 
                             max={1} 
                             step={0.1}
-                            defaultValue={[0]}
+                            defaultValue={[formValues.incorrectAnswer1Grade]}
                             onValueChange={([v]) => form.setValue("incorrectAnswer1Grade", v)}
                           />
+                          <p className="text-sm text-muted-foreground">Current value: {formValues.incorrectAnswer1Grade}</p>
                         </div>
                         <div className="space-y-2">
                           <Label>Rationale</Label>
@@ -196,9 +204,10 @@ export default function TaskOne() {
                             min={0} 
                             max={1} 
                             step={0.1}
-                            defaultValue={[0]}
+                            defaultValue={[formValues.incorrectAnswer2Grade]}
                             onValueChange={([v]) => form.setValue("incorrectAnswer2Grade", v)}
                           />
+                          <p className="text-sm text-muted-foreground">Current value: {formValues.incorrectAnswer2Grade}</p>
                         </div>
                         <div className="space-y-2">
                           <Label>Rationale</Label>
@@ -218,12 +227,12 @@ export default function TaskOne() {
                           <div className="ml-4 space-y-2">
                             <p>Metadata Quality Check:</p>
                             <ul className="ml-4 space-y-1">
-                              <li>Domain: {formData.domainCorrect ? "correct" : "needs improvement"}</li>
-                              <li>Subdomain: {formData.subdomainCorrect ? "correct" : "needs improvement"}</li>
-                              <li>Rating: {formData.difficultyScore}</li>
-                              <li>Quality: {formData.quality}</li>
+                              <li>Domain: {formValues.domainCorrect ? "correct" : "needs improvement"}</li>
+                              <li>Subdomain: {formValues.subdomainCorrect ? "correct" : "needs improvement"}</li>
+                              <li>Rating: {formValues.difficultyScore}</li>
+                              <li>Quality: {formValues.quality}</li>
                             </ul>
-                            <p>Suggestions: {formData.suggestions}</p>
+                            <p>Suggestions: {formValues.suggestions}</p>
                           </div>
                         </div>
 
@@ -233,22 +242,22 @@ export default function TaskOne() {
                             <div>
                               <p className="font-medium">1. Correct answer:</p>
                               <ul className="ml-4">
-                                <li>Grade: {formData.correctAnswerGrade}/1</li>
-                                <li>Rationale: {formData.correctAnswerRationale}</li>
+                                <li>Grade: {formValues.correctAnswerGrade}/1</li>
+                                <li>Rationale: {formValues.correctAnswerRationale}</li>
                               </ul>
                             </div>
                             <div>
                               <p className="font-medium">2. Incorrect answer 1:</p>
                               <ul className="ml-4">
-                                <li>Grade: {formData.incorrectAnswer1Grade}/1</li>
-                                <li>Rationale: {formData.incorrectAnswer1Rationale}</li>
+                                <li>Grade: {formValues.incorrectAnswer1Grade}/1</li>
+                                <li>Rationale: {formValues.incorrectAnswer1Rationale}</li>
                               </ul>
                             </div>
                             <div>
                               <p className="font-medium">3. Incorrect answer 2:</p>
                               <ul className="ml-4">
-                                <li>Grade: {formData.incorrectAnswer2Grade}/1</li>
-                                <li>Rationale: {formData.incorrectAnswer2Rationale}</li>
+                                <li>Grade: {formValues.incorrectAnswer2Grade}/1</li>
+                                <li>Rationale: {formValues.incorrectAnswer2Rationale}</li>
                               </ul>
                             </div>
                           </div>
@@ -257,9 +266,9 @@ export default function TaskOne() {
                         <div>
                           <h4 className="font-medium mb-2">Summary of Grading Results:</h4>
                           <ul className="ml-4">
-                            <li>human_grade_reference (correct answer): {formData.correctAnswerGrade}/1</li>
-                            <li>human_grade_candidate (incorrect answer 1): {formData.incorrectAnswer1Grade}/1</li>
-                            <li>human_grade_candidate (incorrect answer 2): {formData.incorrectAnswer2Grade}/1</li>
+                            <li>human_grade_reference (correct answer): {formValues.correctAnswerGrade}/1</li>
+                            <li>human_grade_candidate (incorrect answer 1): {formValues.incorrectAnswer1Grade}/1</li>
+                            <li>human_grade_candidate (incorrect answer 2): {formValues.incorrectAnswer2Grade}/1</li>
                           </ul>
                         </div>
                       </div>
