@@ -10,15 +10,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Eye, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 function parseRubricNames(rubricText: string): string[] {
   try {
@@ -33,7 +30,7 @@ function parseRubricNames(rubricText: string): string[] {
       }
     }
 
-    console.log("Parsed rubric names:", names); // Debug log
+    console.log("Parsed rubric names:", names); 
     return names;
   } catch (error) {
     console.error("Error parsing rubric names:", error);
@@ -58,6 +55,122 @@ function AnswerModal({ title, content }: { title: string; content: string }) {
         </div>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function RubricItemEvaluation({
+  name,
+  index,
+  form,
+}: {
+  name: string;
+  index: number;
+  form: any;
+}) {
+  return (
+    <div className="space-y-6 border-b pb-6 last:border-0">
+      <h3 className="font-semibold">Rubric Item {index + 1}: {name}</h3>
+
+      <div className="space-y-4">
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <Label>I. Technical Accuracy</Label>
+            <Slider
+              min={1}
+              max={4}
+              step={1}
+              defaultValue={[form.getValues(`rubricItems.${index}.technicalAccuracy`) || 1]}
+              onValueChange={([v]) => form.setValue(`rubricItems.${index}.technicalAccuracy`, v)}
+            />
+            <p className="text-sm text-muted-foreground">
+              Current value: {form.watch(`rubricItems.${index}.technicalAccuracy`)}
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>II. Relevance and Necessity</Label>
+            <Slider
+              min={1}
+              max={4}
+              step={1}
+              defaultValue={[form.getValues(`rubricItems.${index}.relevanceNecessity`) || 1]}
+              onValueChange={([v]) => form.setValue(`rubricItems.${index}.relevanceNecessity`, v)}
+            />
+            <p className="text-sm text-muted-foreground">
+              Current value: {form.watch(`rubricItems.${index}.relevanceNecessity`)}
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-center space-x-2">
+              <Label>III. Partial Credit Structure</Label>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id={`differingAnswers-${index}`}
+                  checked={form.watch(`rubricItems.${index}.differingAnswers`)}
+                  onCheckedChange={(checked) => form.setValue(`rubricItems.${index}.differingAnswers`, checked)}
+                />
+                <label htmlFor={`differingAnswers-${index}`} className="text-sm text-muted-foreground">
+                  Differs for incorrect answers 1 and 2
+                </label>
+              </div>
+            </div>
+            <Slider
+              min={1}
+              max={4}
+              step={1}
+              defaultValue={[form.getValues(`rubricItems.${index}.partialCreditStructure`) || 1]}
+              onValueChange={([v]) => form.setValue(`rubricItems.${index}.partialCreditStructure`, v)}
+            />
+            <p className="text-sm text-muted-foreground">
+              Current value: {form.watch(`rubricItems.${index}.partialCreditStructure`)}
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>IV. Weighting</Label>
+            <Slider
+              min={1}
+              max={4}
+              step={1}
+              defaultValue={[form.getValues(`rubricItems.${index}.weighting`) || 1]}
+              onValueChange={([v]) => form.setValue(`rubricItems.${index}.weighting`, v)}
+            />
+            <p className="text-sm text-muted-foreground">
+              Current value: {form.watch(`rubricItems.${index}.weighting`)}
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>V. Clarity and Objectivity</Label>
+            <Slider
+              min={1}
+              max={4}
+              step={1}
+              defaultValue={[form.getValues(`rubricItems.${index}.clarityObjectivity`) || 1]}
+              onValueChange={([v]) => form.setValue(`rubricItems.${index}.clarityObjectivity`, v)}
+            />
+            <p className="text-sm text-muted-foreground">
+              Current value: {form.watch(`rubricItems.${index}.clarityObjectivity`)}
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>VI. Differentiation Power</Label>
+            <Slider
+              min={1}
+              max={4}
+              step={1}
+              defaultValue={[form.getValues(`rubricItems.${index}.differentiationPower`) || 1]}
+              onValueChange={([v]) => form.setValue(`rubricItems.${index}.differentiationPower`, v)}
+            />
+            <p className="text-sm text-muted-foreground">
+              Current value: {form.watch(`rubricItems.${index}.differentiationPower`)}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -192,7 +305,7 @@ export default function TaskTwo() {
     ? parseRubricNames(workflow.taskZeroInputs.expert_a_rubric)
     : [];
 
-  console.log("Expert A Rubric:", workflow?.taskZeroInputs?.expert_a_rubric); // Debug log
+  console.log("Expert A Rubric:", workflow?.taskZeroInputs?.expert_a_rubric);
 
   const defaultValues = {
     rubricItems: rubricNames.map(name => ({
@@ -203,6 +316,14 @@ export default function TaskTwo() {
       correctRationale: "",
       incorrectRationale1: "",
       incorrectRationale2: "",
+      // Add evaluation fields
+      technicalAccuracy: 1,
+      relevanceNecessity: 1,
+      partialCreditStructure: 1,
+      differingAnswers: false,
+      weighting: 1,
+      clarityObjectivity: 1,
+      differentiationPower: 1,
     }))
   };
 
@@ -211,7 +332,6 @@ export default function TaskTwo() {
     defaultValues,
   });
 
-  // Watch form values for live updates
   const formValues = form.watch();
 
   const addRubricItem = () => {
@@ -226,6 +346,13 @@ export default function TaskTwo() {
         correctRationale: "",
         incorrectRationale1: "",
         incorrectRationale2: "",
+        technicalAccuracy: 1,
+        relevanceNecessity: 1,
+        partialCreditStructure: 1,
+        differingAnswers: false,
+        weighting: 1,
+        clarityObjectivity: 1,
+        differentiationPower: 1,
       }
     ]);
   };
@@ -267,9 +394,10 @@ export default function TaskTwo() {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="step1">
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="step1">Step 1: Grading Solutions</TabsTrigger>
-                <TabsTrigger value="step2">Step 2: Review and Submit</TabsTrigger>
+                <TabsTrigger value="step2">Step 2: Rubric Evaluation</TabsTrigger>
+                <TabsTrigger value="step3">Step 3: Review and Submit</TabsTrigger>
               </TabsList>
 
               <Form {...form}>
@@ -283,10 +411,7 @@ export default function TaskTwo() {
                           index={index}
                           form={form}
                           workflow={workflow}
-                          onRemove={
-                            // Only allow removing manually added items
-                            index >= rubricNames.length ? () => removeRubricItem(index) : undefined
-                          }
+                          onRemove={index >= rubricNames.length ? () => removeRubricItem(index) : undefined}
                         />
                       ))}
 
@@ -303,38 +428,67 @@ export default function TaskTwo() {
                   </TabsContent>
 
                   <TabsContent value="step2">
+                    <div className="space-y-8">
+                      {formValues.rubricItems.map((item, index) => (
+                        <RubricItemEvaluation
+                          key={index}
+                          name={item.name}
+                          index={index}
+                          form={form}
+                        />
+                      ))}
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="step3">
                     <div className="space-y-6">
                       <h3 className="font-semibold">Review and Submit</h3>
                       <div className="bg-muted p-4 rounded-lg space-y-6">
-                        {formValues.rubricItems.map((item, index) => (
-                          <div key={index} className="space-y-4">
-                            <h4 className="font-medium">Rubric Item {index + 1}: {item.name}</h4>
-                            <div className="ml-4">
-                              <h5 className="font-medium">Score:</h5>
-                              <ul className="ml-4 space-y-1">
-                                <li>Correct answer Score: {item.correctScore} points</li>
-                                <li>Incorrect answer 1 Score: {item.incorrectScore1} points</li>
-                                <li>Incorrect answer 2 Score: {item.incorrectScore2} points</li>
-                              </ul>
+                        <div>
+                          <h4 className="font-semibold mb-4">Step 1: Grading Solutions Using the Rubric</h4>
+                          {formValues.rubricItems.map((item, index) => (
+                            <div key={index} className="mb-6">
+                              <h5 className="font-medium">Rubric Item {index + 1}: {item.name}</h5>
+                              <div className="ml-4">
+                                <p className="font-medium mt-2">Score:</p>
+                                <ul className="list-disc ml-6">
+                                  <li>Correct answer Score: {item.correctScore} points</li>
+                                  <li>Incorrect answer 1 Score: {item.incorrectScore1} points</li>
+                                  <li>Incorrect answer 2 Score: {item.incorrectScore2} points</li>
+                                </ul>
 
-                              <h5 className="font-medium mt-4">Rationale:</h5>
-                              <ul className="ml-4 space-y-2">
-                                <li>
-                                  <span className="font-medium">Correct answer:</span>
-                                  <p className="mt-1">{item.correctRationale}</p>
-                                </li>
-                                <li>
-                                  <span className="font-medium">Incorrect answer 1:</span>
-                                  <p className="mt-1">{item.incorrectRationale1}</p>
-                                </li>
-                                <li>
-                                  <span className="font-medium">Incorrect answer 2:</span>
-                                  <p className="mt-1">{item.incorrectRationale2}</p>
-                                </li>
-                              </ul>
+                                <p className="font-medium mt-2">Rationale:</p>
+                                <ul className="list-disc ml-6">
+                                  <li>Correct answer: {item.correctRationale}</li>
+                                  <li>Incorrect answer 1: {item.incorrectRationale1}</li>
+                                  <li>Incorrect answer 2: {item.incorrectRationale2}</li>
+                                </ul>
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
+
+                        <div>
+                          <h4 className="font-semibold mb-4">Step 2: Rubric Evaluation (1-4)</h4>
+                          {formValues.rubricItems.map((item, index) => (
+                            <div key={index} className="mb-6">
+                              <h5 className="font-medium">Rubric Item {index + 1}: {item.name}</h5>
+                              <div className="ml-4">
+                                <ul className="list-disc ml-6">
+                                  <li>I. Technical Accuracy: {item.technicalAccuracy}</li>
+                                  <li>II. Relevance and Necessity: {item.relevanceNecessity}</li>
+                                  <li>
+                                    III. Partial Credit Structure: {item.partialCreditStructure}
+                                    {item.differingAnswers && " (differs for incorrect answers 1 and 2)"}
+                                  </li>
+                                  <li>IV. Weighting: {item.weighting}</li>
+                                  <li>V. Clarity and Objectivity: {item.clarityObjectivity}</li>
+                                  <li>VI. Differentiation Power: {item.differentiationPower}</li>
+                                </ul>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
 
                       <Button 

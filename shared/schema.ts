@@ -40,6 +40,14 @@ export const workflowTasks = pgTable("workflow_tasks", {
       correctRationale: string;
       incorrectRationale1: string;
       incorrectRationale2: string;
+      // Add rubric evaluation fields
+      technicalAccuracy: number;
+      relevanceNecessity: number;
+      partialCreditStructure: number;
+      differingAnswers: boolean;
+      weighting: number;
+      clarityObjectivity: number;
+      differentiationPower: number;
     }[]
   }>().default(null),
   currentStep: text("current_step").default("task-zero"),
@@ -83,6 +91,14 @@ export const taskTwoResponseSchema = z.object({
     correctRationale: z.string().min(1, "Rationale is required"),
     incorrectRationale1: z.string().min(1, "Rationale is required"),
     incorrectRationale2: z.string().min(1, "Rationale is required"),
+    // Add rubric evaluation fields
+    technicalAccuracy: z.number().min(1).max(4),
+    relevanceNecessity: z.number().min(1).max(4),
+    partialCreditStructure: z.number().min(1).max(4),
+    differingAnswers: z.boolean(),
+    weighting: z.number().min(1).max(4),
+    clarityObjectivity: z.number().min(1).max(4),
+    differentiationPower: z.number().min(1).max(4),
   }))
 });
 
