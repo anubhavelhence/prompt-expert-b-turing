@@ -2,6 +2,15 @@ import { pgTable, text, serial, integer, json } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Add Task 4 types and schema
+export const taskFourResponseSchema = z.object({
+  overallRubricsCompleteness: z.number().min(1).max(4),
+  overallRubricsClarity: z.number().min(1).max(4),
+  overallRubricsFlexibility: z.number().min(1).max(4),
+  evaluateRubricsRationale: z.string().min(1, "Rationale is required"),
+});
+
+// Update workflowTasks table
 export const workflowTasks = pgTable("workflow_tasks", {
   id: serial("id").primaryKey(),
   taskZeroInputs: json("task_zero_inputs").$type<{
@@ -30,7 +39,7 @@ export const workflowTasks = pgTable("workflow_tasks", {
     incorrectAnswer1Rationale: string;
     incorrectAnswer2Grade: number;
     incorrectAnswer2Rationale: string;
-  }>().default(null),
+  }>(),
   taskTwoResponses: json("task_two_responses").$type<{
     rubricItems: {
       name: string;
@@ -48,7 +57,7 @@ export const workflowTasks = pgTable("workflow_tasks", {
       clarityObjectivity: number;
       differentiationPower: number;
     }[]
-  }>().default(null),
+  }>(),
   taskThreeResponses: json("task_three_responses").$type<{
     correctAnswerGrade: number;
     correctAnswerRationale: string;
@@ -56,7 +65,13 @@ export const workflowTasks = pgTable("workflow_tasks", {
     incorrectAnswer1Rationale: string;
     incorrectAnswer2Grade: number;
     incorrectAnswer2Rationale: string;
-  }>().default(null),
+  }>(),
+  taskFourResponses: json("task_four_responses").$type<{
+    overallRubricsCompleteness: number;
+    overallRubricsClarity: number;
+    overallRubricsFlexibility: number;
+    evaluateRubricsRationale: string;
+  }>(),
   currentStep: text("current_step").default("task-zero"),
 });
 
@@ -125,3 +140,14 @@ export type TaskZeroInputs = z.infer<typeof taskZeroSchema>;
 export type TaskOneResponse = z.infer<typeof taskOneResponseSchema>;
 export type TaskTwoResponse = z.infer<typeof taskTwoResponseSchema>;
 export type TaskThreeResponse = z.infer<typeof taskThreeResponseSchema>;
+export type TaskFourResponse = z.infer<typeof taskFourResponseSchema>;
+
+export type {
+  InsertWorkflow,
+  WorkflowTask,
+  TaskZeroInputs,
+  TaskOneResponse,
+  TaskTwoResponse,
+  TaskThreeResponse,
+  TaskFourResponse,
+};

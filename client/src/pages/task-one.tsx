@@ -51,16 +51,7 @@ export default function TaskOne() {
     onSuccess: () => {
       toast({
         title: "Success",
-        description: "Task 1 responses saved. Moving to Task 2...",
-      });
-      // Navigate to Task 2 after successful submission
-      setLocation(`/task-two/${id}`);
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to save responses",
-        variant: "destructive",
+        description: "Task 1 responses saved",
       });
     },
   });
@@ -82,26 +73,28 @@ export default function TaskOne() {
             <h2 className="text-xl font-bold mb-4">Task Information</h2>
             <p className="mb-4">Run this prompt and based on output answer the following question:</p>
             <div className="bg-muted p-4 rounded-lg">
-              <p className="mb-4">You are an expert evaluator tasked with assessing the quality of proposed questions for testing Large Language Models (LLMs). Your evaluation is crucial for ensuring that these questions meet the required standards for difficulty, originality, and expert-level reasoning. Your assessment will contribute to the advancement of AI evaluation techniques.</p>
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-medium">Domain:</h3>
-                  <p>{workflow.taskZeroInputs.expert_a_domain}</p>
-                </div>
-                <div>
-                  <h3 className="font-medium">Subdomain:</h3>
-                  <p>{workflow.taskZeroInputs.expert_a_subdomain}</p>
-                </div>
-                <div>
-                  <h3 className="font-medium">Difficulty Score:</h3>
-                  <p>{workflow.taskZeroInputs.expert_a_difficulty_score}</p>
-                </div>
-                <div>
-                  <h3 className="font-medium">Problem Statement:</h3>
-                  <p>{workflow.taskZeroInputs.expert_a_problem}</p>
-                </div>
-                <p>Your task is to evaluate the question based on the following criteria:</p>
+              <p>You are an expert evaluator tasked with assessing the quality of proposed questions for testing Large Language Models (LLMs). Your evaluation is crucial for ensuring that these questions meet the required standards for difficulty, originality, and expert-level reasoning. Your assessment will contribute to the advancement of AI evaluation techniques.</p>
+              <p className="mt-4">Here are the details of the proposed question:</p>
+              <p className="mt-2">Domain:</p>
+              <p>{workflow.taskZeroInputs.expert_a_domain}</p>
+
+              <p className="mt-2">Subdomain:</p>
+              <p>{workflow.taskZeroInputs.expert_a_subdomain}</p>
+
+              <p className="mt-2">Difficulty Score:</p>
+              <p>{workflow.taskZeroInputs.expert_a_difficulty}</p>
+
+              <p className="mt-2">Problem Statement:</p>
+              <p>{workflow.taskZeroInputs.expert_a_problem}</p>
+
+              <p className="mt-2">Your task is to evaluate the question based on the following criteria:</p>
+
+              <div className="mt-4 space-y-2">
+                <p>1. Review the metadata quality and correctness</p>
+                <p>2. Assess the problem statement and solutions</p>
+                <p>3. Provide detailed feedback and suggestions</p>
               </div>
+
             </div>
           </CardContent>
         </Card>
@@ -124,7 +117,7 @@ export default function TaskOne() {
                     <div className="space-y-6">
                       <div className="space-y-2">
                         <Label>Domain</Label>
-                        <RadioGroup 
+                        <RadioGroup
                           onValueChange={(v) => form.setValue("domainCorrect", v === "correct")}
                           defaultValue={formValues.domainCorrect ? "correct" : "needs-improvement"}
                         >
@@ -141,7 +134,7 @@ export default function TaskOne() {
 
                       <div className="space-y-2">
                         <Label>Subdomain</Label>
-                        <RadioGroup 
+                        <RadioGroup
                           onValueChange={(v) => form.setValue("subdomainCorrect", v === "correct")}
                           defaultValue={formValues.subdomainCorrect ? "correct" : "needs-improvement"}
                         >
@@ -158,9 +151,9 @@ export default function TaskOne() {
 
                       <div className="space-y-2">
                         <Label>Difficulty Score (1-5)</Label>
-                        <Slider 
-                          min={1} 
-                          max={5} 
+                        <Slider
+                          min={1}
+                          max={5}
                           step={1}
                           defaultValue={[formValues.difficultyScore]}
                           onValueChange={([v]) => form.setValue("difficultyScore", v)}
@@ -187,9 +180,9 @@ export default function TaskOne() {
                         <h4 className="font-medium">Correct Answer</h4>
                         <div className="space-y-2">
                           <Label>Grade (0-1)</Label>
-                          <Slider 
-                            min={0} 
-                            max={1} 
+                          <Slider
+                            min={0}
+                            max={1}
                             step={0.1}
                             defaultValue={[formValues.correctAnswerGrade]}
                             onValueChange={([v]) => form.setValue("correctAnswerGrade", v)}
@@ -206,9 +199,9 @@ export default function TaskOne() {
                         <h4 className="font-medium">Incorrect Answer 1</h4>
                         <div className="space-y-2">
                           <Label>Grade (0-1)</Label>
-                          <Slider 
-                            min={0} 
-                            max={1} 
+                          <Slider
+                            min={0}
+                            max={1}
                             step={0.1}
                             defaultValue={[formValues.incorrectAnswer1Grade]}
                             onValueChange={([v]) => form.setValue("incorrectAnswer1Grade", v)}
@@ -225,9 +218,9 @@ export default function TaskOne() {
                         <h4 className="font-medium">Incorrect Answer 2</h4>
                         <div className="space-y-2">
                           <Label>Grade (0-1)</Label>
-                          <Slider 
-                            min={0} 
-                            max={1} 
+                          <Slider
+                            min={0}
+                            max={1}
                             step={0.1}
                             defaultValue={[formValues.incorrectAnswer2Grade]}
                             onValueChange={([v]) => form.setValue("incorrectAnswer2Grade", v)}
@@ -298,8 +291,8 @@ export default function TaskOne() {
                         </div>
                       </div>
 
-                      <Button 
-                        type="submit" 
+                      <Button
+                        type="submit"
                         className="w-full"
                         disabled={mutation.isPending}
                       >

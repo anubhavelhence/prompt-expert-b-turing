@@ -1,4 +1,4 @@
-import { useParams } from "wouter";
+import { useParams, useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { TaskThreeResponse, taskThreeResponseSchema, WorkflowTask } from "@shared/schema";
@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 export default function TaskThree() {
   const { id } = useParams();
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
 
   const { data: workflow, isLoading } = useQuery<WorkflowTask>({
     queryKey: [`/api/workflow/${id}`],
@@ -42,8 +43,11 @@ export default function TaskThree() {
     onSuccess: () => {
       toast({
         title: "Success",
-        description: "Task 3 responses saved",
+        description: "Task 3 responses saved. Moving to Task 4...",
       });
+      setTimeout(() => {
+        setLocation(`/task-four/${id}`);
+      }, 1000);
     },
     onError: () => {
       toast({
@@ -188,8 +192,8 @@ export default function TaskThree() {
                         </div>
                       </div>
 
-                      <Button 
-                        type="submit" 
+                      <Button
+                        type="submit"
                         className="w-full"
                         disabled={mutation.isPending}
                       >
