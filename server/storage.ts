@@ -1,4 +1,4 @@
-import { workflowTasks, type WorkflowTask, type TaskZeroInputs, type TaskOneResponse, type TaskTwoResponse } from "@shared/schema";
+import { workflowTasks, type WorkflowTask, type TaskZeroInputs, type TaskOneResponse, type TaskTwoResponse, type TaskThreeResponse } from "@shared/schema";
 
 export interface IStorage {
   createWorkflow(taskZeroInputs: TaskZeroInputs): Promise<WorkflowTask>;
@@ -6,6 +6,7 @@ export interface IStorage {
   updateWorkflowStep(id: number, step: string): Promise<WorkflowTask>;
   updateTaskOneResponses(id: number, responses: TaskOneResponse): Promise<WorkflowTask>;
   updateTaskTwoResponses(id: number, responses: TaskTwoResponse): Promise<WorkflowTask>;
+  updateTaskThreeResponses(id: number, responses: TaskThreeResponse): Promise<WorkflowTask>;
 }
 
 export class MemStorage implements IStorage {
@@ -24,6 +25,7 @@ export class MemStorage implements IStorage {
       taskZeroInputs,
       taskOneResponses: null,
       taskTwoResponses: null,
+      taskThreeResponses: null,
       currentStep: "task-zero",
     };
     this.workflows.set(id, workflow);
@@ -57,6 +59,15 @@ export class MemStorage implements IStorage {
     if (!workflow) throw new Error("Workflow not found");
 
     const updated = { ...workflow, taskTwoResponses: responses };
+    this.workflows.set(id, updated);
+    return updated;
+  }
+
+  async updateTaskThreeResponses(id: number, responses: TaskThreeResponse): Promise<WorkflowTask> {
+    const workflow = await this.getWorkflow(id);
+    if (!workflow) throw new Error("Workflow not found");
+
+    const updated = { ...workflow, taskThreeResponses: responses };
     this.workflows.set(id, updated);
     return updated;
   }

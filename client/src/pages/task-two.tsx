@@ -1,4 +1,4 @@
-import { useParams } from "wouter";
+import { useParams, useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { TaskTwoResponse, taskTwoResponseSchema, WorkflowTask } from "@shared/schema";
@@ -296,6 +296,7 @@ function RubricItemForm({
 export default function TaskTwo() {
   const { id } = useParams();
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
 
   const { data: workflow, isLoading } = useQuery<WorkflowTask>({
     queryKey: [`/api/workflow/${id}`],
@@ -372,7 +373,16 @@ export default function TaskTwo() {
     onSuccess: () => {
       toast({
         title: "Success",
-        description: "Task 2 responses saved",
+        description: "Task 2 responses saved. Moving to Task 3...",
+      });
+      setLocation(`/task-three/${id}`);
+    },
+    onError: (err) => {
+      console.error("Error submitting task 2:", err);
+      toast({
+        title: "Error",
+        description: "Failed to save responses",
+        variant: "destructive",
       });
     },
   });

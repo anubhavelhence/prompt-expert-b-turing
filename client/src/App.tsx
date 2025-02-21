@@ -7,6 +7,7 @@ import Home from "@/pages/home";
 import TaskZero from "@/pages/task-zero";
 import TaskOne from "@/pages/task-one";
 import TaskTwo from "@/pages/task-two";
+import TaskThree from "@/pages/task-three";
 
 function Router() {
   return (
@@ -15,6 +16,7 @@ function Router() {
       <Route path="/task-zero" component={TaskZero} />
       <Route path="/task-one/:id" component={TaskOne} />
       <Route path="/task-two/:id" component={TaskTwo} />
+      <Route path="/task-three/:id" component={TaskThree} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -40,7 +40,6 @@ export const workflowTasks = pgTable("workflow_tasks", {
       correctRationale: string;
       incorrectRationale1: string;
       incorrectRationale2: string;
-      // Add rubric evaluation fields
       technicalAccuracy: number;
       relevanceNecessity: number;
       partialCreditStructure: number;
@@ -49,6 +48,14 @@ export const workflowTasks = pgTable("workflow_tasks", {
       clarityObjectivity: number;
       differentiationPower: number;
     }[]
+  }>().default(null),
+  taskThreeResponses: json("task_three_responses").$type<{
+    correctAnswerGrade: number;
+    correctAnswerRationale: string;
+    incorrectAnswer1Grade: number;
+    incorrectAnswer1Rationale: string;
+    incorrectAnswer2Grade: number;
+    incorrectAnswer2Rationale: string;
   }>().default(null),
   currentStep: text("current_step").default("task-zero"),
 });
@@ -91,7 +98,6 @@ export const taskTwoResponseSchema = z.object({
     correctRationale: z.string().min(1, "Rationale is required"),
     incorrectRationale1: z.string().min(1, "Rationale is required"),
     incorrectRationale2: z.string().min(1, "Rationale is required"),
-    // Add rubric evaluation fields
     technicalAccuracy: z.number().min(1).max(4),
     relevanceNecessity: z.number().min(1).max(4),
     partialCreditStructure: z.number().min(1).max(4),
@@ -102,6 +108,15 @@ export const taskTwoResponseSchema = z.object({
   }))
 });
 
+export const taskThreeResponseSchema = z.object({
+  correctAnswerGrade: z.number().min(0).max(4),
+  correctAnswerRationale: z.string().min(1, "Rationale is required"),
+  incorrectAnswer1Grade: z.number().min(0).max(4),
+  incorrectAnswer1Rationale: z.string().min(1, "Rationale is required"),
+  incorrectAnswer2Grade: z.number().min(0).max(4),
+  incorrectAnswer2Rationale: z.string().min(1, "Rationale is required"),
+});
+
 export const insertWorkflowSchema = createInsertSchema(workflowTasks);
 
 export type InsertWorkflow = z.infer<typeof insertWorkflowSchema>;
@@ -109,3 +124,4 @@ export type WorkflowTask = typeof workflowTasks.$inferSelect;
 export type TaskZeroInputs = z.infer<typeof taskZeroSchema>;
 export type TaskOneResponse = z.infer<typeof taskOneResponseSchema>;
 export type TaskTwoResponse = z.infer<typeof taskTwoResponseSchema>;
+export type TaskThreeResponse = z.infer<typeof taskThreeResponseSchema>;
