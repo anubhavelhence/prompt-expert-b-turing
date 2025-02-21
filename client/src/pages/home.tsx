@@ -12,7 +12,7 @@ export default function Home() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <ClipboardList className="h-6 w-6" />
-            Workflow Automation
+            Expert B/C Workflow
           </CardTitle>
         </CardHeader>
         <CardContent>
