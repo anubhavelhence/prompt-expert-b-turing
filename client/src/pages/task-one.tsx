@@ -34,6 +34,10 @@ export default function TaskOne() {
       suggestions: "",
       correctAnswerGrade: 0,
       correctAnswerRationale: "",
+      incorrectAnswer1Grade: 0,
+      incorrectAnswer1Rationale: "",
+      incorrectAnswer2Grade: 0,
+      incorrectAnswer2Rationale: "",
     },
   });
 
@@ -52,6 +56,8 @@ export default function TaskOne() {
   if (isLoading || !workflow) {
     return <div>Loading...</div>;
   }
+
+  const formData = form.getValues();
 
   return (
     <div className="min-h-screen bg-background p-4">
@@ -144,29 +150,120 @@ export default function TaskOne() {
                   </TabsContent>
 
                   <TabsContent value="step2">
-                    <h3 className="font-semibold mb-4">Grade the Correct Answer</h3>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label>Grade (0-1)</Label>
-                        <Slider 
-                          min={0} 
-                          max={1} 
-                          step={0.1}
-                          defaultValue={[0]}
-                          onValueChange={([v]) => form.setValue("correctAnswerGrade", v)}
-                        />
+                    <h3 className="font-semibold mb-4">Grade the Solutions</h3>
+                    <div className="space-y-6">
+                      <div className="space-y-4">
+                        <h4 className="font-medium">Correct Answer</h4>
+                        <div className="space-y-2">
+                          <Label>Grade (0-1)</Label>
+                          <Slider 
+                            min={0} 
+                            max={1} 
+                            step={0.1}
+                            defaultValue={[0]}
+                            onValueChange={([v]) => form.setValue("correctAnswerGrade", v)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Rationale</Label>
+                          <Textarea {...form.register("correctAnswerRationale")} />
+                        </div>
                       </div>
 
-                      <div className="space-y-2">
-                        <Label>Rationale</Label>
-                        <Textarea {...form.register("correctAnswerRationale")} />
+                      <div className="space-y-4">
+                        <h4 className="font-medium">Incorrect Answer 1</h4>
+                        <div className="space-y-2">
+                          <Label>Grade (0-1)</Label>
+                          <Slider 
+                            min={0} 
+                            max={1} 
+                            step={0.1}
+                            defaultValue={[0]}
+                            onValueChange={([v]) => form.setValue("incorrectAnswer1Grade", v)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Rationale</Label>
+                          <Textarea {...form.register("incorrectAnswer1Rationale")} />
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <h4 className="font-medium">Incorrect Answer 2</h4>
+                        <div className="space-y-2">
+                          <Label>Grade (0-1)</Label>
+                          <Slider 
+                            min={0} 
+                            max={1} 
+                            step={0.1}
+                            defaultValue={[0]}
+                            onValueChange={([v]) => form.setValue("incorrectAnswer2Grade", v)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Rationale</Label>
+                          <Textarea {...form.register("incorrectAnswer2Rationale")} />
+                        </div>
                       </div>
                     </div>
                   </TabsContent>
 
                   <TabsContent value="step3">
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                       <h3 className="font-semibold">Review and Submit</h3>
+
+                      <div className="bg-muted p-4 rounded-lg space-y-4">
+                        <div>
+                          <h4 className="font-medium mb-2">Step 1: Review Problem and Metadata</h4>
+                          <div className="ml-4 space-y-2">
+                            <p>Metadata Quality Check:</p>
+                            <ul className="ml-4 space-y-1">
+                              <li>Domain: {formData.domainCorrect ? "correct" : "needs improvement"}</li>
+                              <li>Subdomain: {formData.subdomainCorrect ? "correct" : "needs improvement"}</li>
+                              <li>Rating: {formData.difficultyScore}</li>
+                              <li>Quality: {formData.quality}</li>
+                            </ul>
+                            <p>Suggestions: {formData.suggestions}</p>
+                          </div>
+                        </div>
+
+                        <div>
+                          <h4 className="font-medium mb-2">Step 2 and 3: Grading the Solutions</h4>
+                          <div className="ml-4 space-y-4">
+                            <div>
+                              <p className="font-medium">1. Correct answer:</p>
+                              <ul className="ml-4">
+                                <li>Grade: {formData.correctAnswerGrade}/1</li>
+                                <li>Rationale: {formData.correctAnswerRationale}</li>
+                              </ul>
+                            </div>
+                            <div>
+                              <p className="font-medium">2. Incorrect answer 1:</p>
+                              <ul className="ml-4">
+                                <li>Grade: {formData.incorrectAnswer1Grade}/1</li>
+                                <li>Rationale: {formData.incorrectAnswer1Rationale}</li>
+                              </ul>
+                            </div>
+                            <div>
+                              <p className="font-medium">3. Incorrect answer 2:</p>
+                              <ul className="ml-4">
+                                <li>Grade: {formData.incorrectAnswer2Grade}/1</li>
+                                <li>Rationale: {formData.incorrectAnswer2Rationale}</li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <h4 className="font-medium mb-2">Summary of Grading Results:</h4>
+                          <ul className="ml-4">
+                            <li>human_grade_reference (correct answer): {formData.correctAnswerGrade}/1</li>
+                            <li>human_grade_candidate (incorrect answer 1): {formData.incorrectAnswer1Grade}/1</li>
+                            <li>human_grade_candidate (incorrect answer 2): {formData.incorrectAnswer2Grade}/1</li>
+                          </ul>
+                        </div>
+                      </div>
+
                       <Button 
                         type="submit" 
                         className="w-full"

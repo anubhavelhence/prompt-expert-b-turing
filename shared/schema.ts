@@ -26,6 +26,10 @@ export const workflowTasks = pgTable("workflow_tasks", {
     suggestions: string;
     correctAnswerGrade: number;
     correctAnswerRationale: string;
+    incorrectAnswer1Grade: number;
+    incorrectAnswer1Rationale: string;
+    incorrectAnswer2Grade: number;
+    incorrectAnswer2Rationale: string;
   }>().default(null),
   currentStep: text("current_step").default("task-zero"),
 });
@@ -53,6 +57,10 @@ export const taskOneResponseSchema = z.object({
   suggestions: z.string().min(1, "Suggestions are required"),
   correctAnswerGrade: z.number().min(0).max(1),
   correctAnswerRationale: z.string().min(1, "Rationale is required"),
+  incorrectAnswer1Grade: z.number().min(0).max(1),
+  incorrectAnswer1Rationale: z.string().min(1, "Rationale for incorrect answer 1 is required"),
+  incorrectAnswer2Grade: z.number().min(0).max(1),
+  incorrectAnswer2Rationale: z.string().min(1, "Rationale for incorrect answer 2 is required"),
 });
 
 export const insertWorkflowSchema = createInsertSchema(workflowTasks);
