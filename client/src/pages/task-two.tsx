@@ -295,8 +295,8 @@ function RubricItemForm({
 
 export default function TaskTwo() {
   const { id } = useParams();
-  const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const { toast } = useToast();
 
   const { data: workflow, isLoading } = useQuery<WorkflowTask>({
     queryKey: [`/api/workflow/${id}`],
@@ -317,7 +317,6 @@ export default function TaskTwo() {
       correctRationale: "",
       incorrectRationale1: "",
       incorrectRationale2: "",
-      // Add evaluation fields
       technicalAccuracy: 1,
       relevanceNecessity: 1,
       partialCreditStructure: 1,
@@ -368,24 +367,39 @@ export default function TaskTwo() {
 
   const mutation = useMutation({
     mutationFn: async (data: TaskTwoResponse) => {
-      await apiRequest("PATCH", `/api/workflow/${id}/task-two`, data);
+      console.log("Submitting Task 2 data:", data); 
+      const response = await apiRequest("PATCH", `/api/workflow/${id}/task-two`, data);
+      console.log("Task 2 submission response:", response); 
+      return response;
     },
     onSuccess: () => {
+      console.log("Task 2 submission successful"); 
       toast({
         title: "Success",
         description: "Task 2 responses saved. Moving to Task 3...",
       });
-      setLocation(`/task-three/${id}`);
+      setTimeout(() => {
+        setLocation(`/task-three/${id}`);
+      }, 1000);
     },
-    onError: (err) => {
-      console.error("Error submitting task 2:", err);
+    onError: (error) => {
+      console.error("Task 2 submission error:", error); 
       toast({
         title: "Error",
-        description: "Failed to save responses",
+        description: "Failed to save responses. Please try again.",
         variant: "destructive",
       });
     },
   });
+
+  const onSubmit = async (data: TaskTwoResponse) => {
+    console.log("Form submitted with data:", data); 
+    try {
+      await mutation.mutateAsync(data);
+    } catch (error) {
+      console.error("Form submission error:", error); 
+    }
+  };
 
   if (isLoading || !workflow) {
     return <div>Loading...</div>;
@@ -411,7 +425,7 @@ export default function TaskTwo() {
               </TabsList>
 
               <Form {...form}>
-                <form onSubmit={form.handleSubmit((data) => mutation.mutate(data))}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <TabsContent value="step1">
                     <div className="space-y-8">
                       {formValues.rubricItems.map((item, index) => (
