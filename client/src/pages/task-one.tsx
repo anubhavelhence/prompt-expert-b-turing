@@ -114,13 +114,80 @@ export default function TaskOne() {
               <p className="mt-2">Problem Statement:</p>
               <p>{workflow.taskZeroInputs.expert_a_problem}</p>
 
-              <p className="mt-2">Your task is to evaluate the question based on the following criteria:</p>
+              <p className="mt-4 font-semibold">Your task is to evaluate the question based on the following criteria:</p>
 
               <div className="mt-4 space-y-2">
-                <p>1. Review the metadata quality and correctness</p>
-                <p>2. Assess the problem statement and solutions</p>
-                <p>3. Provide detailed feedback and suggestions</p>
+                <p>1. Formatting: Is the format of the question correct?</p>
+                <p>2. Originality: Is this question original material?</p>
+                <p>3. Difficulty: Is this question difficult enough?</p>
+                <p>4. Information Dependencies: Does this question require information that is not included in the prompt and could not easily be found on the internet?</p>
+                <p>5. Temporal Retrieval: Does this question require information based on events past April 2024?</p>
+                <p>6. Expert-level Reasoning: Does this question require expert-level reasoning and intelligence?</p>
+                <p>7. Outcome-based: Is the question presented in a way that there is likely an objectively correct, gradable answer (or a finite number of plausibly correct answers) that multiple domain experts could agree on?</p>
               </div>
+
+              <h2 className="text-xl font-bold mt-6">Instructions for Evaluation</h2>
+              <p className="mt-2">Follow these steps to evaluate the question:</p>
+
+              <ol className="list-decimal list-inside mt-4 space-y-2">
+                <li>Carefully read the problem statement and associated details.</li>
+                <li>For each criterion, provide a detailed assessment inside <span className="font-mono">&lt;criterion_analysis&gt;</span> tags.</li>
+                <li>Provide specific feedback and suggestions for improvement if needed.</li>
+                <li>Use the following format for each criterion evaluation:</li>
+              </ol>
+
+              <div className="mt-4 space-y-2">
+                <p className="font-semibold">Evaluation Format:</p>
+
+
+                    &lt;evaluation&gt;
+
+                    &lt;criterion&gt;Criterion Name&lt;/criterion&gt;
+                    &lt;assessment&gt;Your assessment of whether the question meets this criterion&lt;/assessment&gt;
+                    &lt;feedback&gt;Specific feedback and suggestions for improvement, if needed&lt;/feedback&gt;
+                    &lt;/evaluation&gt;
+
+
+              </div>
+
+              <h2 className="text-xl font-bold mt-6">Final Assessment</h2>
+              <p className="mt-2">After evaluating all criteria, provide the following details:</p>
+
+              <ul className="list-disc list-inside mt-4 space-y-2">
+                <li>A difficulty rating (1-5) based on the following guidance:</li>
+                <ul className="list-disc list-inside ml-6 space-y-1">
+                  <li>1: Challenging but straightforward for a strong field student</li>
+                  <li>5: Extremely difficult even for subfield experts</li>
+                </ul>
+                <li>Your assessment of the appropriate domain and subdomain for this question, which may differ from the provided information.</li>
+              </ul>
+
+              <div className="bg-muted p-4 rounded-lg mt-4">
+                <p className="font-semibold">Final Assessment Format:</p>
+                    &lt;final_assessment&gt;
+                    &lt;difficulty_rating&gt;Your assigned difficulty rating (1-5)&lt;/difficulty_rating&gt;
+                    &lt;assigned_domain&gt;Your assigned domain&lt;/assigned_domain&gt;
+                    &lt;assigned_subdomain&gt;Your assigned subdomain&lt;/assigned_subdomain&gt;
+                    &lt;overall_quality&gt;Your overall assessment of the question's quality and suitability&lt;/overall_quality&gt;
+                    &lt;improvement_suggestions&gt;Any additional suggestions for improving the question&lt;/improvement_suggestions&gt;
+                    &lt;/final_assessment&gt;
+              </div>
+
+              <h2 className="text-xl font-bold mt-6">Evaluation Guidelines</h2>
+              <p className="mt-2">Consider the following guidelines when evaluating:</p>
+
+              <ul className="list-disc list-inside mt-4 space-y-2">
+                <li>Questions should focus on evaluating reasoning and intelligence over factual knowledge.</li>
+                <li>They should require multi-step reasoning and deep thinking.</li>
+                <li>Questions should not be easily answerable without specific domain expertise.</li>
+                <li>They should be novel and unlikely to be rote problems for models.</li>
+                <li>Ensure questions can't be answered with simple fact retrieval.</li>
+                <li>The target difficulty level should be such that an average Doctorate-level student or equivalent (8+ years professional experience) would score 60-80%.</li>
+                <li>Questions should be challenging enough that current state-of-the-art models get &lt;15% correct 0-shot.</li>
+                <li>All content should be original and not in the public domain.</li>
+              </ul>
+
+              <p className="mt-4">Begin your evaluation now, starting with your analysis for the first criterion.</p>
 
             </div>
           </CardContent>

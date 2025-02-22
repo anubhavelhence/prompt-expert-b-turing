@@ -57,7 +57,7 @@ export default function TaskZero() {
     <div className="min-h-screen bg-background p-4">
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
-          <CardTitle>Task 0: Initial Information</CardTitle>
+          <CardTitle>Task 0: Initial Information from Expert A Question</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
