@@ -250,6 +250,31 @@ function RubricItemForm({
       </div>
 
       <div className="space-y-4">
+        <div className="bg-muted p-4 rounded-lg space-y-4">
+          <div>
+            <h4 className="font-medium text-sm">Reasoning:</h4>
+            <p className="text-sm text-muted-foreground mt-1">
+              {workflow.taskZeroInputs?.expert_a_rubric?.match(new RegExp(`<name>${name}</name>\\s*<reasoning>([\\s\\S]*?)</reasoning>`))?.[1] || 'No reasoning provided'}
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-medium text-sm">Grading Guidelines:</h4>
+            <p className="text-sm text-muted-foreground mt-1 whitespace-pre-line">
+              {workflow.taskZeroInputs?.expert_a_rubric?.match(new RegExp(`<name>${name}</name>[\\s\\S]*?<grading_guidelines>([\\s\\S]*?)</grading_guidelines>`))?.[1] || 'No guidelines provided'}
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-medium text-sm">Item Weight:</h4>
+            <p className="text-sm text-muted-foreground mt-1">
+              {workflow.taskZeroInputs?.expert_a_rubric?.match(new RegExp(`<name>${name}</name>[\\s\\S]*?<item_weight>([\\s\\S]*?)</item_weight>`))?.[1] || 'No weight provided'}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-4">
         <h4 className="font-medium">Score:</h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-center gap-2">
