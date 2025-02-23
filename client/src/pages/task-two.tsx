@@ -238,6 +238,22 @@ function RubricItemForm({
 }) {
   if (!workflow.taskZeroInputs) return null;
 
+  // Helper function to extract content between tags
+  const extractContent = (text: string, itemName: string, tag: string) => {
+    const regex = new RegExp(
+      `<name>\\s*${itemName}\\s*</name>[\\s\\S]*?<${tag}>([\\s\\S]*?)</${tag}>`,
+      'i'
+    );
+    const match = workflow.taskZeroInputs?.expert_a_rubric?.match(regex);
+    return match?.[1]?.trim() || `No ${tag} provided`;
+  };
+
+  const reasoning = extractContent(workflow.taskZeroInputs.expert_a_rubric, name, 'reasoning');
+  const guidelines = extractContent(workflow.taskZeroInputs.expert_a_rubric, name, 'grading_guidelines');
+  const weight = extractContent(workflow.taskZeroInputs.expert_a_rubric, name, 'item_weight');
+
+  console.log(`Rubric Item ${name}:`, { reasoning, guidelines, weight });
+
   return (
     <div className="space-y-6 border-b pb-6 last:border-0">
       <div className="flex justify-between items-center">
@@ -253,22 +269,22 @@ function RubricItemForm({
         <div className="bg-muted p-4 rounded-lg space-y-4">
           <div>
             <h4 className="font-medium text-sm">Reasoning:</h4>
-            <p className="text-sm text-muted-foreground mt-1">
-              {workflow.taskZeroInputs?.expert_a_rubric?.match(new RegExp(`<name>${name}</name>\\s*<reasoning>([\\s\\S]*?)</reasoning>`))?.[1] || 'No reasoning provided'}
+            <p className="text-sm text-muted-foreground mt-1 whitespace-pre-line">
+              {reasoning}
             </p>
           </div>
 
           <div>
             <h4 className="font-medium text-sm">Grading Guidelines:</h4>
             <p className="text-sm text-muted-foreground mt-1 whitespace-pre-line">
-              {workflow.taskZeroInputs?.expert_a_rubric?.match(new RegExp(`<name>${name}</name>[\\s\\S]*?<grading_guidelines>([\\s\\S]*?)</grading_guidelines>`))?.[1] || 'No guidelines provided'}
+              {guidelines}
             </p>
           </div>
 
           <div>
             <h4 className="font-medium text-sm">Item Weight:</h4>
             <p className="text-sm text-muted-foreground mt-1">
-              {workflow.taskZeroInputs?.expert_a_rubric?.match(new RegExp(`<name>${name}</name>[\\s\\S]*?<item_weight>([\\s\\S]*?)</item_weight>`))?.[1] || 'No weight provided'}
+              {weight}
             </p>
           </div>
         </div>
