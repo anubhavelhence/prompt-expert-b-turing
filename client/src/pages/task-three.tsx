@@ -74,6 +74,16 @@ export default function TaskThree() {
             <CardTitle>Task 3: Evaluate Model Grading (Rubric test)</CardTitle>
           </CardHeader>
           <CardContent>
+            <div className="mb-6 p-4 bg-muted rounded-lg">
+              <h3 className="font-medium mb-2">Instructions for Comparing and Assessing Rubric Test:</h3>
+              <ul className="list-disc list-inside space-y-2">
+                <li>Compare any disagreements between your grading and the model grading</li>
+                <li>Note: This evaluates grading quality, NOT quality of the rubrics themselves</li>
+                <li>Rate how much you agree with: "The model grading applies the rubric correctly, including partial credit"</li>
+                <li>Rating scale: 1 = Strongly Disagree, 4 = Strongly Agree</li>
+                <li>Provide a 1-2 sentence explanation for your assessment, including any potential issues in rubric interpretation by the model</li>
+              </ul>
+            </div>
             <Tabs defaultValue="step1">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="step1">Step 1: Evaluate Model Grading</TabsTrigger>
