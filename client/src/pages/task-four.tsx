@@ -69,6 +69,16 @@ export default function TaskFour() {
             <CardTitle>Task 4: Evaluate the Rubric</CardTitle>
           </CardHeader>
           <CardContent>
+            <div className="mb-6 p-4 bg-muted rounded-lg">
+              <h3 className="font-medium mb-2">Instructions for Rubric Evaluation:</h3>
+              <p className="mb-4">Rate how much you agree with each statement (1 = Strongly Disagree, 4 = Strongly Agree):</p>
+              <ul className="list-disc list-inside space-y-2">
+                <li>Completeness: The rubric covers all the important points and is complete</li>
+                <li>Clarity: The rubric is concise, unambiguous, and easy to follow</li>
+                <li>Flexibility: The rubric is flexible enough for grading different solutions or methods</li>
+              </ul>
+              <p className="mt-4">After rating, provide a brief (1-2 sentence) evaluation explaining why the rubrics are good/bad and how to improve them.</p>
+            </div>
             <Tabs defaultValue="step1">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="step1">Step 1: Evaluate the Rubric</TabsTrigger>
