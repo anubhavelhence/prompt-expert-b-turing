@@ -136,18 +136,21 @@ export default function TaskOne() {
                 <li>Use the following format for each criterion evaluation:</li>
               </ol>
 
-              <div className="mt-4 space-y-2">
-                <p className="font-semibold">Evaluation Format:</p>
-
-
-                    &lt;evaluation&gt;
-
-                    &lt;criterion&gt;Criterion Name&lt;/criterion&gt;
-                    &lt;assessment&gt;Your assessment of whether the question meets this criterion&lt;/assessment&gt;
-                    &lt;feedback&gt;Specific feedback and suggestions for improvement, if needed&lt;/feedback&gt;
-                    &lt;/evaluation&gt;
-
-
+              <div className="bg-muted p-4 rounded-lg">
+                <p>Use the following format for each criterion evaluation:</p>
+                <pre className="mt-4 whitespace-pre-wrap">
+&lt;evaluation&gt;
+    &lt;criterion&gt;
+        Criterion Name
+    &lt;/criterion&gt;
+    &lt;assessment&gt;
+        Your assessment of whether the question meets this criterion
+    &lt;/assessment&gt;
+    &lt;feedback&gt;
+        Specific feedback and suggestions for improvement, if needed
+    &lt;/feedback&gt;
+&lt;/evaluation&gt;
+                </pre>
               </div>
 
               <h2 className="text-xl font-bold mt-6">Final Assessment</h2>
