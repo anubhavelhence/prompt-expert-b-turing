@@ -20,47 +20,36 @@ import { Label } from "@/components/ui/label";
 function parseRubricNames(rubricText: string): string[] {
   try {
     const names: string[] = [];
-    // First try to parse XML-style tags
-    const tagRegex = /<rubric_item>([\s\S]*?)<\/rubric_item>/g;
-    let match;
 
-    while ((match = tagRegex.exec(rubricText)) !== null) {
-      const itemContent = match[1].trim();
-      // Try to find a name or title within the rubric item
-      const nameMatch = /<(name|title)>([\s\S]*?)<\/(name|title)>/i.exec(itemContent);
-      if (nameMatch) {
-        names.push(nameMatch[2].trim());
-      } else {
-        // If no explicit name/title tag, use the first line as the name
-        const firstLine = itemContent.split('\n')[0].trim();
-        if (firstLine) {
-          names.push(firstLine);
+    // First try to find rubrics sections
+    const rubricsRegex = /<rubrics>([\s\S]*?)<\/rubrics>/g;
+    let rubricsMatch;
+
+    while ((rubricsMatch = rubricsRegex.exec(rubricText)) !== null) {
+      const rubricsContent = rubricsMatch[1];
+
+      // Find name tags within each rubrics section
+      const nameRegex = /<name>([\s\S]*?)<\/name>/g;
+      let nameMatch;
+
+      while ((nameMatch = nameRegex.exec(rubricsContent)) !== null) {
+        const name = nameMatch[1].trim();
+        if (name) {
+          names.push(name);
         }
       }
     }
 
-    // If no XML-style tags found, try to parse bullet points or numbered lists
+    // If no names found through tags, try to parse bullet points
     if (names.length === 0) {
       const lines = rubricText.split('\n');
       for (const line of lines) {
         const trimmed = line.trim();
-        // Match bullet points or numbered lists
         if (/^[\d\.\-\*•]\s+/.test(trimmed)) {
           const content = trimmed.replace(/^[\d\.\-\*•]\s+/, '').trim();
           if (content) {
             names.push(content);
           }
-        }
-      }
-    }
-
-    // If still no items found, split by newlines and take non-empty lines
-    if (names.length === 0) {
-      const lines = rubricText.split('\n');
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (trimmed && trimmed.length > 0) {
-          names.push(trimmed);
         }
       }
     }
