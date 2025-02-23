@@ -1,4 +1,4 @@
-import { Link, useLocation } from "wouter";
+import { useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
@@ -18,7 +18,7 @@ export function Sidebar() {
 
   // If we're on a task page, fetch the workflow data
   const { data: workflow } = useQuery<WorkflowTask>({
-    queryKey: currentId ? ['/api/workflow', currentId] : [],
+    queryKey: currentId ? [`/api/workflow/${currentId}`] : [],
     enabled: !!currentId,
   });
 
@@ -30,8 +30,12 @@ export function Sidebar() {
     },
     onSuccess: (data) => {
       // Navigate to the selected task with the new workflow ID
-      const path = location.split('/')[1];
-      setLocation(`/${path}/${data.id}`);
+      const taskPath = location.split('/')[1];
+      if (taskPath === "task-zero") {
+        setLocation("/task-zero");
+      } else {
+        setLocation(`/${taskPath}/${data.id}`);
+      }
     },
     onError: () => {
       toast({
@@ -61,6 +65,14 @@ export function Sidebar() {
   ];
 
   const handleTaskClick = (task: typeof tasks[0]) => {
+    const taskPath = task.path.substring(1); // Remove leading slash
+
+    // For task-zero, no need for workflow ID
+    if (taskPath === "task-zero") {
+      setLocation(task.path);
+      return;
+    }
+
     // If we're already on a task with an ID, use that ID for navigation
     if (currentId) {
       setLocation(`${task.path}/${currentId}`);
