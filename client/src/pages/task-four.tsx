@@ -66,7 +66,7 @@ export default function TaskFour() {
       <div className="max-w-6xl mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle>Task 4: Evaluate the Rubric</CardTitle>
+            <CardTitle>Task 4: Evaluate the Rubric Completeness</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="mb-6 p-4 bg-muted rounded-lg">

@@ -97,8 +97,8 @@ export default function TaskOne() {
         {/* Left Panel */}
         <Card>
           <CardContent className="p-6">
-            <h2 className="text-xl font-bold mb-4">Task Information</h2>
-            <p className="mb-4">Run this prompt and based on output answer the following question:</p>
+            <h2 className="text-xl font-bold mb-4">Task 1: Evaluating Expert A's Question and Solution without any rubric</h2>
+            <p className="mb-4">Run this prompt and based on output from Claude, answer the following question:</p>
             <div className="bg-muted p-4 rounded-lg">
               <p>You are an expert evaluator tasked with assessing the quality of proposed questions for testing Large Language Models (LLMs). Your evaluation is crucial for ensuring that these questions meet the required standards for difficulty, originality, and expert-level reasoning. Your assessment will contribute to the advancement of AI evaluation techniques.</p>
               <p className="mt-4">Here are the details of the proposed question:</p>
