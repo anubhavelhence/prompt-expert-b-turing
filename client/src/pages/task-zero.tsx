@@ -41,10 +41,12 @@ export default function TaskZero() {
 
   const mutation = useMutation({
     mutationFn: async (data: TaskZeroInputs) => {
+      console.log("Submitting Task 0 data:", data);
       const res = await apiRequest("POST", "/api/workflow", data);
       return res.json();
     },
     onSuccess: async (data) => {
+      console.log("Task 0 submission successful:", data);
       // Download the submission as docx
       await downloadTaskZero(form.getValues());
 
@@ -54,7 +56,8 @@ export default function TaskZero() {
       });
       setLocation(`/task-one/${data.id}`);
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("Task 0 submission error:", error);
       toast({
         title: "Error",
         description: "Failed to save Task 0 data",

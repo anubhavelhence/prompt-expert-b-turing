@@ -322,38 +322,56 @@ export default function TaskTwo() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
 
-  const { data: workflow, isLoading } = useQuery<WorkflowTask>({
+  const { data: workflow, isLoading, error } = useQuery<WorkflowTask>({
     queryKey: [`/api/workflow/${id}`],
     staleTime: 0, // Always fetch fresh data
     retry: 3, // Retry failed requests
     retryDelay: 1000, // Wait 1 second between retries
+    onSuccess: (data) => {
+      console.log("Workflow data loaded successfully:", data);
+      if (!data?.taskZeroInputs?.expert_a_rubric) {
+        console.warn("No rubric data found in workflow");
+      }
+    },
+    onError: (err) => {
+      console.error("Error loading workflow data:", err);
+    }
   });
 
+  // Save the rubric names for debugging
   const rubricNames = workflow?.taskZeroInputs
     ? parseRubricNames(workflow.taskZeroInputs.expert_a_rubric)
     : [];
 
-  console.log("Expert A Rubric:", workflow?.taskZeroInputs?.expert_a_rubric);
-  console.log("Parsed rubric names:", rubricNames);
+  console.log("Task 2 - Workflow Data:", workflow);
+  console.log("Task 2 - Expert A Rubric:", workflow?.taskZeroInputs?.expert_a_rubric);
+  console.log("Task 2 - Parsed rubric names:", rubricNames);
 
-  const defaultValues = {
-    rubricItems: rubricNames.map((name) => ({
-      name,
-      correctScore: 0,
-      incorrectScore1: 0,
-      incorrectScore2: 0,
-      correctRationale: "",
-      incorrectRationale1: "",
-      incorrectRationale2: "",
-      technicalAccuracy: 1,
-      relevanceNecessity: 1,
-      partialCreditStructure: 1,
-      differingAnswers: false,
-      weighting: 1,
-      clarityObjectivity: 1,
-      differentiationPower: 1,
-    })),
-  };
+  // Initialize form with default values
+  const savedFormData = typeof window !== 'undefined'
+    ? localStorage.getItem(`task-two-${id}`)
+    : null;
+
+  const defaultValues = savedFormData
+    ? JSON.parse(savedFormData)
+    : {
+        rubricItems: rubricNames.map((name) => ({
+          name,
+          correctScore: 0,
+          incorrectScore1: 0,
+          incorrectScore2: 0,
+          correctRationale: "",
+          incorrectRationale1: "",
+          incorrectRationale2: "",
+          technicalAccuracy: 1,
+          relevanceNecessity: 1,
+          partialCreditStructure: 1,
+          differingAnswers: false,
+          weighting: 1,
+          clarityObjectivity: 1,
+          differentiationPower: 1,
+        })),
+      };
 
   const form = useForm<TaskTwoResponse>({
     resolver: zodResolver(taskTwoResponseSchema),
@@ -398,6 +416,10 @@ export default function TaskTwo() {
       console.log("Submitting Task 2 data:", data);
       const response = await apiRequest("PATCH", `/api/workflow/${id}/task-two`, data);
       console.log("Task 2 submission response:", response);
+      // Persist form data to localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(`task-two-${id}`, JSON.stringify(data));
+      }
       return response;
     },
     onSuccess: () => {
@@ -431,6 +453,10 @@ export default function TaskTwo() {
 
   if (isLoading || !workflow) {
     return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading workflow: {error.message}</div>;
   }
 
   if (!workflow.taskZeroInputs) {
