@@ -23,7 +23,7 @@ export function Sidebar() {
     enabled: !!currentId,
   });
 
-  // Store the target task path for navigation after workflow creation
+  // Store the target task path for navigation
   const [targetTaskPath, setTargetTaskPath] = useState<string | null>(null);
 
   // Mutation to create a new workflow
@@ -68,20 +68,35 @@ export function Sidebar() {
   ];
 
   const handleTaskClick = (task: typeof tasks[0]) => {
-    // Handle navigation to Task Zero
+    // For Task Zero, always navigate directly
     if (task.path === "/task-zero") {
       setLocation("/task-zero");
       return;
     }
 
-    // If we're on Task 0 or don't have a workflow, store the target path and create a workflow
-    if (location.includes("task-zero") || !currentId) {
+    // Check if we have a current workflow
+    if (!currentId) {
+      // No workflow exists, need to create one first
       setTargetTaskPath(task.path);
-      createWorkflowMutation.mutate();
+      toast({
+        title: "Creating new workflow",
+        description: "Please complete Task 0 first",
+      });
+      setLocation("/task-zero");
       return;
     }
 
-    // For other tasks with an existing workflow ID, navigate directly
+    // Check if we have task dependencies met
+    if (!workflow?.taskZeroInputs && task.path !== "/task-one") {
+      toast({
+        title: "Task dependency",
+        description: "Please complete Task 0 first",
+      });
+      setLocation(`/task-zero`);
+      return;
+    }
+
+    // Navigate to the task with the current workflow ID
     setLocation(`${task.path}/${currentId}`);
   };
 
