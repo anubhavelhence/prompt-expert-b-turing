@@ -1,0 +1,39 @@
+"Expert B/C grades each rubric item, according to the provided guideline, with each solution on a 0-2 scale:  0 = incorrect, 1 = partial credit, 2 = full credit. (With Rubric)
+i. (Expert Answer) ""reference_score"": ""0 or 1 or 2"" 
+ii. (Claude Answer) ""candidate_score"": ""0 or 1 or 2"""
+"Expert B/C grades provides a brief (1-2 sentence) rationale for grading with references to the answer in quotes as needed.
+i. Bad = “it was all correct”
+ii. Good = “Included analysis of .... and stated ‘....’”
+iii. ""reference_grading_rationale"": ""explain why you assigned this score"",
+iv. ""candidate_grading_rationale"": ""explain why you assigned this score"","
+"Expert B/C evaluates  this rubric item with the following criteria: “How much do you agree with the following statements:” 1= Strongly Disagree, 4= Strongly Agree
+
+i. Technical Accuracy: ""The rubric item is correct about technical details.""
+1. Verify that all technical information in the rubric is accurate and up-to-date.
+2. ""technical_correctness"": 1-4 rating,
+
+ii. Relevance and Necessity: ""The rubric item is necessary, not redundant, and only grades what is explicitly required in the original problem.""
+1. Ensure each criterion directly relates to the problem statement.
+2. Check that no criterion could be removed without affecting the overall assessment.
+3. Ensure basic expectations (e.g., correct grammar and spelling) are not included as explicit criteria.
+4. ""necessity"": 1-4 rating,
+
+iii. Partial Credit Structure: ""The guidelines for assigning partial credit are logically structured and clearly distinguishable from one another.""
+1. Verify that the 2/1/0 scoring system is used consistently.
+2. Ensure partial credit guidelines are clear and distinguishable.
+3. ""partial_credit_effectiveness"": 1-4 rating
+
+iv. Weighting: “The weight assigned to this criteria item is appropriate based on the importance to the problem.”
+1. Confirm that weights are assigned to each item (0.00-1.00).
+2. Verify that the total weight across all items equals 1.00.
+3. ""weight_correctness"": 1-4 rating
+
+v. Clarity and Objectivity: “This criteria item is atomic, clear, objective, and specific to the question.”
+1. Verify that each criterion is atomic (a single, yes-or-no condition).
+2. Check that the rubric is understandable by non-experts.
+3. ""clarity_objectivitiy"": 1-4 rating
+
+vi. Differentiation Power:  “This criteria item distinguishes between different levels of answer quality (correct/incorrect) appropriately.”
+1. Confirm the rubric clearly differentiates between correct and incorrect answers.
+2. Verify that all necessary information is present to make this distinction.
+3. “differentiation_power"": 1-4 rating"
