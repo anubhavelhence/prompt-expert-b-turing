@@ -324,6 +324,9 @@ export default function TaskTwo() {
 
   const { data: workflow, isLoading } = useQuery<WorkflowTask>({
     queryKey: [`/api/workflow/${id}`],
+    staleTime: 0, // Always fetch fresh data
+    retry: 3, // Retry failed requests
+    retryDelay: 1000, // Wait 1 second between retries
   });
 
   const rubricNames = workflow?.taskZeroInputs
@@ -331,6 +334,7 @@ export default function TaskTwo() {
     : [];
 
   console.log("Expert A Rubric:", workflow?.taskZeroInputs?.expert_a_rubric);
+  console.log("Parsed rubric names:", rubricNames);
 
   const defaultValues = {
     rubricItems: rubricNames.map((name) => ({
