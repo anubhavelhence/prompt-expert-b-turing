@@ -65,23 +65,14 @@ export function Sidebar() {
   ];
 
   const handleTaskClick = (task: typeof tasks[0]) => {
-    const taskPath = task.path.substring(1); // Remove leading slash
-
-    // For task-zero, navigate directly
-    if (taskPath === "task-zero") {
-      setLocation(task.path);
+    // Handle navigation to Task Zero
+    if (task.path === "/task-zero") {
+      setLocation("/task-zero");
       return;
     }
 
-    // If there's no current workflow ID or we're coming from task-zero,
-    // create a new workflow before navigating
-    if (!currentId || location.includes("task-zero")) {
-      createWorkflowMutation.mutate();
-      return;
-    }
-
-    // For other tasks with an existing workflow ID, navigate directly
-    setLocation(`${task.path}/${currentId}`);
+    // Create a new workflow and then navigate to the selected task
+    createWorkflowMutation.mutate();
   };
 
   return (
