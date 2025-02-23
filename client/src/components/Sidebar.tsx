@@ -18,7 +18,7 @@ export function Sidebar() {
 
   // If we're on a task page, fetch the workflow data
   const { data: workflow } = useQuery<WorkflowTask>({
-    queryKey: currentId ? [`/api/workflow/${currentId}`] : [],
+    queryKey: [`/api/workflow/${currentId}`],
     enabled: !!currentId,
   });
 

@@ -19,7 +19,6 @@ function Router() {
         <Switch>
           <Route path="/" component={Home} />
           <Route path="/task-zero" component={TaskZero} />
-          <Route path="/task-zero/:id" component={TaskZero} />
           <Route path="/task-one/:id" component={TaskOne} />
           <Route path="/task-two/:id" component={TaskTwo} />
           <Route path="/task-three/:id" component={TaskThree} />
