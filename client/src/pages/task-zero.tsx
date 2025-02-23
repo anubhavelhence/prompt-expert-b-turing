@@ -12,6 +12,25 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { downloadTaskZero } from "@/lib/docx-utils";
 
+function parseRubrics(rubricText: string) {
+  // Split by newlines and filter empty lines
+  const lines = rubricText.split('\n').filter(line => line.trim());
+  const rubrics = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    // Look for lines that could be rubric headers (e.g., "1.", "Rubric 1:", etc.)
+    if (line.match(/^\d+[\.):]|^rubric\s+\d+[:]/i)) {
+      const name = line;
+      const description = lines[i + 1]?.trim() || '';
+      rubrics.push({ name, description });
+    }
+  }
+
+  console.log("Parsed rubric names:", rubrics);
+  return rubrics;
+}
+
 export default function TaskZero() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
@@ -38,6 +57,13 @@ export default function TaskZero() {
           expert_a_correct_rubric_test: "",
         },
   });
+
+  // Watch the rubric field for changes
+  const rubric = form.watch("expert_a_rubric");
+  console.log("Expert A Rubric:", rubric);
+
+  // Parse rubrics whenever the rubric field changes
+  const rubricItems = parseRubrics(rubric);
 
   const mutation = useMutation({
     mutationFn: async (data: TaskZeroInputs) => {
@@ -105,7 +131,22 @@ export default function TaskZero() {
 
               <div className="space-y-2">
                 <label>Rubric</label>
-                <Textarea {...form.register("expert_a_rubric")} />
+                <Textarea {...form.register("expert_a_rubric")} className="min-h-[200px]" />
+                {rubricItems.length > 0 && (
+                  <div className="mt-2 p-4 bg-muted rounded-lg">
+                    <h3 className="font-medium mb-2">Parsed Rubric Items:</h3>
+                    <ul className="list-disc list-inside space-y-2">
+                      {rubricItems.map((item, index) => (
+                        <li key={index}>
+                          <span className="font-medium">{item.name}</span>
+                          {item.description && (
+                            <p className="ml-6 text-sm text-muted-foreground">{item.description}</p>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2">
