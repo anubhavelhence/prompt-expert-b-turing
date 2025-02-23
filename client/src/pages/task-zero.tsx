@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { downloadTaskZero } from "@/lib/docx-utils";
 
 export default function TaskZero() {
   const [, setLocation] = useLocation();
@@ -47,9 +46,6 @@ export default function TaskZero() {
     },
     onSuccess: async (data) => {
       console.log("Task 0 submission successful:", data);
-      // Download the submission as docx
-      await downloadTaskZero(form.getValues());
-
       toast({
         title: "Task 0 completed",
         description: "Moving to Task 1",

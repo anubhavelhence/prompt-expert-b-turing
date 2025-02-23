@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { WorkflowTask } from "@shared/schema";
 import { useState } from "react";
+import { DownloadModal } from "./DownloadModal";
 
 export function Sidebar() {
   const [location, setLocation] = useLocation();
@@ -119,9 +120,12 @@ export function Sidebar() {
           </button>
         ))}
       </div>
+
+      {workflow?.taskZeroInputs && <DownloadModal />}
+
       <Button 
         variant="destructive" 
-        className="w-full"
+        className="w-full mt-2"
         onClick={resetAll}
       >
         <RotateCcw className="w-4 h-4 mr-2" />

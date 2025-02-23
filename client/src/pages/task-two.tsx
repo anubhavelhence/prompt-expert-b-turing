@@ -560,7 +560,7 @@ export default function TaskTwo() {
               
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-medium">1. Grade Solutions (0-2 scale):</h4>
+                  <h4 className="font-medium">1. Grade Correct Answer, Incorrect answer 1 & 2 on 0-2 scale for each rubric item :</h4>
                   <ul className="list-disc list-inside ml-4">
                     <li>0 = incorrect</li>
                     <li>1 = partial credit</li>
