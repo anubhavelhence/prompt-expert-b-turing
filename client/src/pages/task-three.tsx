@@ -96,7 +96,7 @@ export default function TaskThree() {
                     <div className="space-y-8">
                       {/* Correct Answer */}
                       <div className="space-y-4">
-                        <h3 className="font-medium">Correct answer:</h3>
+                        <h3 className="font-medium">Rubric Test for Correct answer:</h3>
                         <div className="space-y-4">
                           <div className="space-y-2">
                             <Label>Evaluate model grading</Label>
@@ -120,7 +120,7 @@ export default function TaskThree() {
 
                       {/* Incorrect Answer 1 */}
                       <div className="space-y-4">
-                        <h3 className="font-medium">Incorrect answer 1:</h3>
+                        <h3 className="font-medium">Rubric Test for Incorrect answer 1:</h3>
                         <div className="space-y-4">
                           <div className="space-y-2">
                             <Label>Evaluate model grading</Label>
@@ -144,7 +144,7 @@ export default function TaskThree() {
 
                       {/* Incorrect Answer 2 */}
                       <div className="space-y-4">
-                        <h3 className="font-medium">Incorrect answer 2:</h3>
+                        <h3 className="font-medium">Rubric Test for Incorrect answer 2:</h3>
                         <div className="space-y-4">
                           <div className="space-y-2">
                             <Label>Evaluate model grading</Label>
