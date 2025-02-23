@@ -53,7 +53,7 @@ export async function downloadTaskZero(data: TaskZeroInputs) {
     ["Incorrect Answer 1 Rubric Test:", data.expert_a_incorrect_1_rubric_test],
     ["Incorrect Answer 2 Rubric Test:", data.expert_a_incorrect_2_rubric_test],
   ];
-  
+
   const doc = createDownloadableDoc(content);
   const blob = await Packer.toBlob(doc);
   saveAs(blob, "task-zero-submission.docx");
@@ -61,18 +61,31 @@ export async function downloadTaskZero(data: TaskZeroInputs) {
 
 export async function downloadTaskOne(data: TaskOneResponse) {
   const content = [
-    ["Metadata Quality:", data.metadataQuality.toString()],
-    ["Domain Correct:", data.domainCorrect ? "Yes" : "No"],
-    ["Subdomain Correct:", data.subdomainCorrect ? "Yes" : "No"],
-    ["Difficulty Score:", data.difficultyScore.toString()],
+    ["Step 1: Review Problem and Metadata", ""],
+    ["Metadata Quality Check:", ""],
+    ["Domain:", data.domainCorrect ? "correct" : "incorrect"],
+    ["Subdomain:", data.subdomainCorrect ? "correct" : "incorrect"],
+    ["Rating:", data.metadataQuality.toString()],
     ["Quality:", data.quality],
     ["Suggestions:", data.suggestions],
-    ["Correct Answer Grade:", data.correctAnswerGrade.toString()],
-    ["Correct Answer Rationale:", data.correctAnswerRationale],
-    ["Incorrect Answer 1 Grade:", data.incorrectAnswer1Grade.toString()],
-    ["Incorrect Answer 1 Rationale:", data.incorrectAnswer1Rationale],
-    ["Incorrect Answer 2 Grade:", data.incorrectAnswer2Grade.toString()],
-    ["Incorrect Answer 2 Rationale:", data.incorrectAnswer2Rationale],
+    ["", ""],
+    ["Step 2 and 3: Grading the Solutions", ""],
+    ["1. Correct answer:", ""],
+    ["Grade:", `${data.correctAnswerGrade}/1`],
+    ["Rationale:", data.correctAnswerRationale],
+    ["", ""],
+    ["2. Incorrect answer 1:", ""],
+    ["Grade:", `${data.incorrectAnswer1Grade}/1`],
+    ["Rationale:", data.incorrectAnswer1Rationale],
+    ["", ""],
+    ["3. Incorrect answer 2:", ""],
+    ["Grade:", `${data.incorrectAnswer2Grade}/1`],
+    ["Rationale:", data.incorrectAnswer2Rationale],
+    ["", ""],
+    ["Summary of Grading Results:", ""],
+    ["human_grade_reference (correct answer):", `${data.correctAnswerGrade}/1`],
+    ["human_grade_candidate (incorrect answer 1):", `${data.incorrectAnswer1Grade}/1`],
+    ["human_grade_candidate (incorrect answer 2):", `${data.incorrectAnswer2Grade}/1`],
   ];
 
   const doc = createDownloadableDoc(content);
