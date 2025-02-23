@@ -29,20 +29,12 @@ export function Sidebar() {
       return response.json();
     },
     onSuccess: (data) => {
-      // Get the target task path from the clicked task
-      const targetTask = tasks.find(task => 
-        location.startsWith(task.path) || 
-        pendingNavigation?.startsWith(task.path)
-      );
-
-      if (targetTask) {
-        // For task-zero, navigate without workflow ID
-        if (targetTask.path === "/task-zero") {
-          setLocation("/task-zero");
-        } else {
-          // For other tasks, include the workflow ID
-          setLocation(`${targetTask.path}/${data.id}`);
-        }
+      // Navigate to the selected task with the new workflow ID
+      const taskPath = location.split('/')[1];
+      if (taskPath === "task-zero") {
+        setLocation("/task-zero");
+      } else {
+        setLocation(`/${taskPath}/${data.id}`);
       }
     },
     onError: () => {
@@ -73,19 +65,13 @@ export function Sidebar() {
   ];
 
   const handleTaskClick = (task: typeof tasks[0]) => {
-    // Always navigate directly to Task Zero
+    // Handle navigation to Task Zero
     if (task.path === "/task-zero") {
       setLocation("/task-zero");
       return;
     }
 
-    // If we're not on Task Zero and have a workflow ID, use it
-    if (currentId && !location.includes("task-zero")) {
-      setLocation(`${task.path}/${currentId}`);
-      return;
-    }
-
-    // Otherwise, create a new workflow
+    // Create a new workflow and then navigate to the selected task
     createWorkflowMutation.mutate();
   };
 
