@@ -555,6 +555,33 @@ export default function TaskTwo() {
             <CardTitle>Task 2: Grading Solutions based on the Rubric</CardTitle>
           </CardHeader>
           <CardContent>
+            <div className="mb-6 p-4 bg-muted rounded-lg">
+              <h3 className="font-medium mb-2">Instructions for Grading and Evaluation:</h3>
+              
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-medium">1. Grade Solutions (0-2 scale):</h4>
+                  <ul className="list-disc list-inside ml-4">
+                    <li>0 = incorrect</li>
+                    <li>1 = partial credit</li>
+                    <li>2 = full credit</li>
+                  </ul>
+                  <p className="text-sm text-muted-foreground mt-1">Provide a brief rationale with specific references to the answer</p>
+                </div>
+
+                <div>
+                  <h4 className="font-medium">2. Evaluate Rubric Items (1-4 scale):</h4>
+                  <ul className="list-disc list-inside ml-4">
+                    <li>Technical Accuracy: Verify technical details accuracy</li>
+                    <li>Relevance: Assess necessity and direct relation to problem</li>
+                    <li>Partial Credit: Check clarity of scoring guidelines</li>
+                    <li>Weighting: Evaluate appropriateness of assigned weights</li>
+                    <li>Clarity: Ensure criteria are atomic and objective</li>
+                    <li>Differentiation: Verify distinction between quality levels</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
             <Tabs defaultValue="step1">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="step1">Step 1: Grading Solutions</TabsTrigger>
