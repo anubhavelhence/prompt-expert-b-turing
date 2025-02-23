@@ -93,7 +93,32 @@ function RubricItemEvaluation({
 }) {
   return (
     <div className="space-y-6 border-b pb-6 last:border-0">
-      <h3 className="font-semibold">Rubric Item {index + 1}: {name}</h3>
+      <div className="space-y-4">
+        <h3 className="font-semibold">Rubric Item {index + 1}: {name}</h3>
+
+        <div className="bg-muted p-4 rounded-lg space-y-4">
+          <div>
+            <h4 className="font-medium text-sm">Reasoning:</h4>
+            <p className="text-sm text-muted-foreground mt-1">
+              {/*This section extracts reasoning from the rubric string*/}
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-medium text-sm">Grading Guidelines:</h4>
+            <p className="text-sm text-muted-foreground mt-1 whitespace-pre-line">
+              {/*This section extracts grading guidelines from the rubric string*/}
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-medium text-sm">Item Weight:</h4>
+            <p className="text-sm text-muted-foreground mt-1">
+              {/*This section extracts item weight from the rubric string*/}
+            </p>
+          </div>
+        </div>
+      </div>
 
       <div className="space-y-4">
         <div className="space-y-6">
