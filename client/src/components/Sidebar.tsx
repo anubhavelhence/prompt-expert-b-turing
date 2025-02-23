@@ -29,13 +29,8 @@ export function Sidebar() {
       return response.json();
     },
     onSuccess: (data) => {
-      // Navigate to the selected task with the new workflow ID
-      const taskPath = location.split('/')[1];
-      if (taskPath === "task-zero") {
-        setLocation("/task-zero");
-      } else {
-        setLocation(`/${taskPath}/${data.id}`);
-      }
+      // When creating a new workflow, always navigate to Task 1
+      setLocation(`/task-one/${data.id}`);
     },
     onError: () => {
       toast({
@@ -71,8 +66,14 @@ export function Sidebar() {
       return;
     }
 
-    // Create a new workflow and then navigate to the selected task
-    createWorkflowMutation.mutate();
+    // If we're on Task 0 or don't have a workflow, create one
+    if (location.includes("task-zero") || !currentId) {
+      createWorkflowMutation.mutate();
+      return;
+    }
+
+    // For other tasks with an existing workflow ID, navigate directly
+    setLocation(`${task.path}/${currentId}`);
   };
 
   return (
