@@ -20,17 +20,52 @@ import { Label } from "@/components/ui/label";
 function parseRubricNames(rubricText: string): string[] {
   try {
     const names: string[] = [];
-    const nameRegex = /<name>([\s\S]*?)<\/name>/g;
+    // First try to parse XML-style tags
+    const tagRegex = /<rubric_item>([\s\S]*?)<\/rubric_item>/g;
     let match;
 
-    while ((match = nameRegex.exec(rubricText)) !== null) {
-      const name = match[1].trim();
-      if (name) {
-        names.push(name);
+    while ((match = tagRegex.exec(rubricText)) !== null) {
+      const itemContent = match[1].trim();
+      // Try to find a name or title within the rubric item
+      const nameMatch = /<(name|title)>([\s\S]*?)<\/(name|title)>/i.exec(itemContent);
+      if (nameMatch) {
+        names.push(nameMatch[2].trim());
+      } else {
+        // If no explicit name/title tag, use the first line as the name
+        const firstLine = itemContent.split('\n')[0].trim();
+        if (firstLine) {
+          names.push(firstLine);
+        }
       }
     }
 
-    console.log("Parsed rubric names:", names); 
+    // If no XML-style tags found, try to parse bullet points or numbered lists
+    if (names.length === 0) {
+      const lines = rubricText.split('\n');
+      for (const line of lines) {
+        const trimmed = line.trim();
+        // Match bullet points or numbered lists
+        if (/^[\d\.\-\*•]\s+/.test(trimmed)) {
+          const content = trimmed.replace(/^[\d\.\-\*•]\s+/, '').trim();
+          if (content) {
+            names.push(content);
+          }
+        }
+      }
+    }
+
+    // If still no items found, split by newlines and take non-empty lines
+    if (names.length === 0) {
+      const lines = rubricText.split('\n');
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed && trimmed.length > 0) {
+          names.push(trimmed);
+        }
+      }
+    }
+
+    console.log("Parsed rubric names:", names);
     return names;
   } catch (error) {
     console.error("Error parsing rubric names:", error);
@@ -174,13 +209,13 @@ function RubricItemEvaluation({
   );
 }
 
-function RubricItemForm({ 
+function RubricItemForm({
   name,
   index,
   form,
   workflow,
-  onRemove
-}: { 
+  onRemove,
+}: {
   name: string;
   index: number;
   form: any;
@@ -214,7 +249,7 @@ function RubricItemForm({
               {...form.register(`rubricItems.${index}.correctScore`, { valueAsNumber: true })}
             />
             <span>points</span>
-            <AnswerModal 
+            <AnswerModal
               title="Correct Answer"
               content={workflow.taskZeroInputs.expert_a_correct}
             />
@@ -230,7 +265,7 @@ function RubricItemForm({
               {...form.register(`rubricItems.${index}.incorrectScore1`, { valueAsNumber: true })}
             />
             <span>points</span>
-            <AnswerModal 
+            <AnswerModal
               title="Incorrect Answer 1"
               content={workflow.taskZeroInputs.expert_a_incorrect_1}
             />
@@ -246,7 +281,7 @@ function RubricItemForm({
               {...form.register(`rubricItems.${index}.incorrectScore2`, { valueAsNumber: true })}
             />
             <span>points</span>
-            <AnswerModal 
+            <AnswerModal
               title="Incorrect Answer 2"
               content={workflow.taskZeroInputs.expert_a_incorrect_2}
             />
@@ -260,7 +295,7 @@ function RubricItemForm({
           <div>
             <div className="flex items-center gap-2 mb-2">
               <label>Correct answer:</label>
-              <AnswerModal 
+              <AnswerModal
                 title="Correct Answer"
                 content={workflow.taskZeroInputs.expert_a_correct}
               />
@@ -270,7 +305,7 @@ function RubricItemForm({
           <div>
             <div className="flex items-center gap-2 mb-2">
               <label>Incorrect answer 1:</label>
-              <AnswerModal 
+              <AnswerModal
                 title="Incorrect Answer 1"
                 content={workflow.taskZeroInputs.expert_a_incorrect_1}
               />
@@ -280,7 +315,7 @@ function RubricItemForm({
           <div>
             <div className="flex items-center gap-2 mb-2">
               <label>Incorrect answer 2:</label>
-              <AnswerModal 
+              <AnswerModal
                 title="Incorrect Answer 2"
                 content={workflow.taskZeroInputs.expert_a_incorrect_2}
               />
@@ -302,14 +337,14 @@ export default function TaskTwo() {
     queryKey: [`/api/workflow/${id}`],
   });
 
-  const rubricNames = workflow?.taskZeroInputs 
+  const rubricNames = workflow?.taskZeroInputs
     ? parseRubricNames(workflow.taskZeroInputs.expert_a_rubric)
     : [];
 
   console.log("Expert A Rubric:", workflow?.taskZeroInputs?.expert_a_rubric);
 
   const defaultValues = {
-    rubricItems: rubricNames.map(name => ({
+    rubricItems: rubricNames.map((name) => ({
       name,
       correctScore: 0,
       incorrectScore1: 0,
@@ -324,7 +359,7 @@ export default function TaskTwo() {
       weighting: 1,
       clarityObjectivity: 1,
       differentiationPower: 1,
-    }))
+    })),
   };
 
   const form = useForm<TaskTwoResponse>({
@@ -353,7 +388,7 @@ export default function TaskTwo() {
         weighting: 1,
         clarityObjectivity: 1,
         differentiationPower: 1,
-      }
+      },
     ]);
   };
 
@@ -361,19 +396,19 @@ export default function TaskTwo() {
     const currentItems = form.getValues().rubricItems || [];
     form.setValue("rubricItems", [
       ...currentItems.slice(0, index),
-      ...currentItems.slice(index + 1)
+      ...currentItems.slice(index + 1),
     ]);
   };
 
   const mutation = useMutation({
     mutationFn: async (data: TaskTwoResponse) => {
-      console.log("Submitting Task 2 data:", data); 
+      console.log("Submitting Task 2 data:", data);
       const response = await apiRequest("PATCH", `/api/workflow/${id}/task-two`, data);
-      console.log("Task 2 submission response:", response); 
+      console.log("Task 2 submission response:", response);
       return response;
     },
     onSuccess: () => {
-      console.log("Task 2 submission successful"); 
+      console.log("Task 2 submission successful");
       toast({
         title: "Success",
         description: "Task 2 responses saved. Moving to Task 3...",
@@ -383,7 +418,7 @@ export default function TaskTwo() {
       }, 1000);
     },
     onError: (error) => {
-      console.error("Task 2 submission error:", error); 
+      console.error("Task 2 submission error:", error);
       toast({
         title: "Error",
         description: "Failed to save responses. Please try again.",
@@ -393,11 +428,11 @@ export default function TaskTwo() {
   });
 
   const onSubmit = async (data: TaskTwoResponse) => {
-    console.log("Form submitted with data:", data); 
+    console.log("Form submitted with data:", data);
     try {
       await mutation.mutateAsync(data);
     } catch (error) {
-      console.error("Form submission error:", error); 
+      console.error("Form submission error:", error);
     }
   };
 
@@ -515,8 +550,8 @@ export default function TaskTwo() {
                         </div>
                       </div>
 
-                      <Button 
-                        type="submit" 
+                      <Button
+                        type="submit"
                         className="w-full"
                         disabled={mutation.isPending}
                       >

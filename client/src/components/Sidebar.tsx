@@ -6,6 +6,7 @@ import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { WorkflowTask } from "@shared/schema";
+import { useState } from "react";
 
 export function Sidebar() {
   const [location, setLocation] = useLocation();
@@ -22,6 +23,9 @@ export function Sidebar() {
     enabled: !!currentId,
   });
 
+  // Store the target task path for navigation after workflow creation
+  const [targetTaskPath, setTargetTaskPath] = useState<string | null>(null);
+
   // Mutation to create a new workflow
   const createWorkflowMutation = useMutation({
     mutationFn: async () => {
@@ -29,8 +33,11 @@ export function Sidebar() {
       return response.json();
     },
     onSuccess: (data) => {
-      // When creating a new workflow, always navigate to Task 1
-      setLocation(`/task-one/${data.id}`);
+      // Navigate to the stored target task path with the new workflow ID
+      if (targetTaskPath) {
+        setLocation(`${targetTaskPath}/${data.id}`);
+        setTargetTaskPath(null); // Reset the target path
+      }
     },
     onError: () => {
       toast({
@@ -38,6 +45,7 @@ export function Sidebar() {
         description: "Failed to create new workflow",
         variant: "destructive",
       });
+      setTargetTaskPath(null); // Reset the target path on error
     },
   });
 
@@ -66,8 +74,9 @@ export function Sidebar() {
       return;
     }
 
-    // If we're on Task 0 or don't have a workflow, create one
+    // If we're on Task 0 or don't have a workflow, store the target path and create a workflow
     if (location.includes("task-zero") || !currentId) {
+      setTargetTaskPath(task.path);
       createWorkflowMutation.mutate();
       return;
     }
