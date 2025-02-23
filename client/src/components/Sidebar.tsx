@@ -1,14 +1,14 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Loader2, RotateCcw } from "lucide-react";
-import { queryClient } from "@/lib/queryClient";
+import { RotateCcw } from "lucide-react";
+import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { WorkflowTask } from "@shared/schema";
 
 export function Sidebar() {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const { toast } = useToast();
 
   // Get the current workflow ID from the URL if it exists
@@ -17,9 +17,29 @@ export function Sidebar() {
   const currentId = isNumeric(workflowId || '') ? workflowId : undefined;
 
   // If we're on a task page, fetch the workflow data
-  const { data: workflow } = useQuery({
-    queryKey: currentId ? ['/api/workflow', currentId] : null,
+  const { data: workflow } = useQuery<WorkflowTask>({
+    queryKey: currentId ? ['/api/workflow', currentId] : [],
     enabled: !!currentId,
+  });
+
+  // Mutation to create a new workflow
+  const createWorkflowMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/workflow", {});
+      return response.json();
+    },
+    onSuccess: (data) => {
+      // Navigate to the selected task with the new workflow ID
+      const path = location.split('/')[1];
+      setLocation(`/${path}/${data.id}`);
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to create new workflow",
+        variant: "destructive",
+      });
+    },
   });
 
   const resetAll = () => {
@@ -34,47 +54,41 @@ export function Sidebar() {
 
   const tasks = [
     { path: "/task-zero", label: "Task 0: Initial Information" },
-    { path: currentId ? `/task-one/${currentId}` : "/task-zero", label: "Task 1: Evaluate Problem" },
-    { path: currentId ? `/task-two/${currentId}` : "/task-zero", label: "Task 2: Grade Solutions" },
-    { path: currentId ? `/task-three/${currentId}` : "/task-zero", label: "Task 3: Evaluate Model Grading" },
-    { path: currentId ? `/task-four/${currentId}` : "/task-zero", label: "Task 4: Evaluate Rubric" },
+    { path: "/task-one", label: "Task 1: Evaluate Problem" },
+    { path: "/task-two", label: "Task 2: Grade Solutions" },
+    { path: "/task-three", label: "Task 3: Evaluate Model Grading" },
+    { path: "/task-four", label: "Task 4: Evaluate Rubric" },
   ];
+
+  const handleTaskClick = (task: typeof tasks[0]) => {
+    // If we're already on a task with an ID, use that ID for navigation
+    if (currentId) {
+      setLocation(`${task.path}/${currentId}`);
+      return;
+    }
+
+    // If no workflow exists, create one and then navigate
+    createWorkflowMutation.mutate();
+  };
 
   return (
     <div className="w-64 h-screen bg-card fixed left-0 top-0 border-r p-4 flex flex-col">
       <div className="space-y-2 flex-1">
         <h2 className="font-semibold mb-4">Task Navigation</h2>
-        {tasks.map((task, index) => {
-          // Don't allow navigation to tasks 1-4 if Task 0 hasn't been completed
-          const isDisabled = index > 0 && !currentId;
-
-          return (
-            <Link 
-              key={index}
-              href={isDisabled ? "/task-zero" : task.path}
-            >
-              <a 
-                className={cn(
-                  "block p-2 rounded-lg transition-colors",
-                  isDisabled ? "opacity-50 cursor-not-allowed" : "hover:bg-accent",
-                  location.includes(task.path.split('/')[1]) && "bg-accent"
-                )}
-                onClick={(e) => {
-                  if (isDisabled) {
-                    e.preventDefault();
-                    toast({
-                      title: "Complete Task 0 first",
-                      description: "You need to complete Task 0 before accessing other tasks.",
-                      variant: "destructive",
-                    });
-                  }
-                }}
-              >
-                {task.label}
-              </a>
-            </Link>
-          );
-        })}
+        {tasks.map((task) => (
+          <button
+            key={task.path}
+            className={cn(
+              "block w-full text-left p-2 rounded-lg transition-colors",
+              "hover:bg-accent",
+              location.includes(task.path.split('/')[1]) && "bg-accent"
+            )}
+            onClick={() => handleTaskClick(task)}
+            disabled={createWorkflowMutation.isPending}
+          >
+            {task.label}
+          </button>
+        ))}
       </div>
       <Button 
         variant="destructive" 

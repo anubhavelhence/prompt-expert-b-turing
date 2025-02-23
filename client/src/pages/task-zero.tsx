@@ -10,26 +10,33 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { downloadTaskZero } from "@/lib/docx-utils";
 
 export default function TaskZero() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
 
+  const savedFormData = typeof window !== 'undefined'
+    ? localStorage.getItem('task-zero-form')
+    : null;
+
   const form = useForm<TaskZeroInputs>({
     resolver: zodResolver(taskZeroSchema),
-    defaultValues: {
-      expert_a_domain: "",
-      expert_a_subdomain: "",
-      expert_a_difficulty_score: 1,
-      expert_a_problem: "",
-      expert_a_rubric: "",
-      expert_a_incorrect_1: "",
-      expert_a_incorrect_2: "",
-      expert_a_correct: "",
-      expert_a_incorrect_1_rubric_test: "",
-      expert_a_incorrect_2_rubric_test: "",
-      expert_a_correct_rubric_test: "",
-    },
+    defaultValues: savedFormData
+      ? JSON.parse(savedFormData)
+      : {
+          expert_a_domain: "",
+          expert_a_subdomain: "",
+          expert_a_difficulty_score: 1,
+          expert_a_problem: "",
+          expert_a_rubric: "",
+          expert_a_incorrect_1: "",
+          expert_a_incorrect_2: "",
+          expert_a_correct: "",
+          expert_a_incorrect_1_rubric_test: "",
+          expert_a_incorrect_2_rubric_test: "",
+          expert_a_correct_rubric_test: "",
+        },
   });
 
   const mutation = useMutation({
@@ -37,7 +44,10 @@ export default function TaskZero() {
       const res = await apiRequest("POST", "/api/workflow", data);
       return res.json();
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
+      // Download the submission as docx
+      await downloadTaskZero(form.getValues());
+
       toast({
         title: "Task 0 completed",
         description: "Moving to Task 1",
@@ -51,6 +61,11 @@ export default function TaskZero() {
         variant: "destructive",
       });
     },
+  });
+
+  // Save form data to localStorage whenever it changes
+  form.watch((value) => {
+    localStorage.setItem('task-zero-form', JSON.stringify(value));
   });
 
   return (
