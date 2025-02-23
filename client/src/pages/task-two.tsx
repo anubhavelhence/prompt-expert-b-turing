@@ -100,21 +100,21 @@ function RubricItemEvaluation({
           <div>
             <h4 className="font-medium text-sm">Reasoning:</h4>
             <p className="text-sm text-muted-foreground mt-1">
-              {/*This section extracts reasoning from the rubric string*/}
+              {workflow.taskZeroInputs?.expert_a_rubric?.match(new RegExp(`<name>${name}</name>\\s*<reasoning>([\\s\\S]*?)</reasoning>`))?.[1] || 'No reasoning provided'}
             </p>
           </div>
 
           <div>
             <h4 className="font-medium text-sm">Grading Guidelines:</h4>
             <p className="text-sm text-muted-foreground mt-1 whitespace-pre-line">
-              {/*This section extracts grading guidelines from the rubric string*/}
+              {workflow.taskZeroInputs?.expert_a_rubric?.match(new RegExp(`<name>${name}</name>[\\s\\S]*?<grading_guidelines>([\\s\\S]*?)</grading_guidelines>`))?.[1] || 'No guidelines provided'}
             </p>
           </div>
 
           <div>
             <h4 className="font-medium text-sm">Item Weight:</h4>
             <p className="text-sm text-muted-foreground mt-1">
-              {/*This section extracts item weight from the rubric string*/}
+              {workflow.taskZeroInputs?.expert_a_rubric?.match(new RegExp(`<name>${name}</name>[\\s\\S]*?<item_weight>([\\s\\S]*?)</item_weight>`))?.[1] || 'No weight provided'}
             </p>
           </div>
         </div>
